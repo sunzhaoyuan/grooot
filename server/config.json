@@ -1,8 +1,10 @@
 {
   "server": {
-    "port": "5000",
-
+    "port": "5000"
+  },
+  "database": {
     "db_instance": "",
+    "db_url": "",
     "db_dbname": "",
     "db_username": "",
     "db_password": ""
