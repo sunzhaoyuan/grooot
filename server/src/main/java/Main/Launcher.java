@@ -1,3 +1,5 @@
+package Main;
+
 /**
  * The launcher of the server.
  */
