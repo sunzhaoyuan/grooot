@@ -1,0 +1,13 @@
+{
+  "server": {
+    "port": "5000",
+
+    "db_instance": "",
+    "db_dbname": "",
+    "db_username": "",
+    "db_password": ""
+  },
+  "client": {
+    "TODO": "TODO"
+  }
+}
