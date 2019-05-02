@@ -4,8 +4,9 @@ import Service.ClientService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -94,19 +95,30 @@ public class Server {
     private void startDatabaseConn() throws IOException {
         // TODO: https://github.com/bane73/firebase4j
         // initialize database connection
+        FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
         DBManager.getInstance().setApp(
                 FirebaseApp.initializeApp(DBManager.getInstance().setOptions(
                         new FirebaseOptions.Builder()
-                                .setCredentials(GoogleCredentials.getApplicationDefault())
+                                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                                 .setDatabaseUrl(Configuration.getInstance().getDB_URL())
                                 .build()
                 ))
         );
         FirebaseApp app = DBManager.getApp();
-        System.out.printf("Server: Firebase app name %s\n", app.getName());
+//        System.out.printf("Server: Firebase app name %s\n", app.getName());
 
-        // TODO: double check this implementation
-        this.database = FirebaseDatabase.getInstance(app);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Object document = dataSnapshot.getValue();
+                System.out.println(document);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
     }
 
     private class ServerService implements Runnable {
@@ -130,8 +142,7 @@ public class Server {
                     e.printStackTrace();
                 }
                 System.out.println("Server: Client accepted");
-                Runnable cs = new ClientService(clientSocket);
-                cs.run();
+                new Thread(new ClientService(clientSocket)).run();
             }
         }
     }

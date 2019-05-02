@@ -1,8 +1,6 @@
 package Service;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientService implements Runnable{
@@ -12,9 +10,21 @@ public class ClientService implements Runnable{
 
     public ClientService(Socket socket) {
         this.socket = socket;
+    }
+
+    private void init() {
         try {
-            in = new DataInputStream(this.socket.getInputStream());
-            out = new DataOutputStream(this.socket.getOutputStream());
+            in = new DataInputStream(new BufferedInputStream(this.socket.getInputStream()));
+            out = new DataOutputStream(new BufferedOutputStream(this.socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            String input = in.readUTF();
+            while (!input.equals("HELLO")) {
+                input = in.readUTF();
+            }
+            out.writeUTF("HELLO");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -22,9 +32,21 @@ public class ClientService implements Runnable{
 
     @Override
     public void run() {
+        init();
+        System.out.println("Server: Handshake with client.");
         String line = "";
-        while (!line.equals("quit")) {
+        while (!line.equals("QUIT")) {
             // TODO:
+            try {
+                line = in.readUTF();
+                parseRes(line);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void parseRes(String line) {
+        // TODO: handle client responds
     }
 }
