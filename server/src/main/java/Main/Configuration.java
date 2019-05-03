@@ -59,7 +59,7 @@ public class Configuration {
         instance.DB_NAME = (String) dbJS.get("db_dbname");
         instance.DB_USERNAME = (String) dbJS.get("db_username");
         instance.DB_PASSWORD = (String) dbJS.get("db_password");
-        instance.DB_URL = (String) dbJS.get("db_dburl");
+        instance.DB_URL = (String) dbJS.get("db_url");
 
     }
 

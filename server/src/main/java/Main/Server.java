@@ -96,20 +96,12 @@ public class Server {
         // TODO: https://github.com/bane73/firebase4j
         // initialize database connection
         FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
-//        DBManager.getInstance().setApp(
-//                FirebaseApp.initializeApp(DBManager.getInstance().setOptions(
-//                        new FirebaseOptions.Builder()
-//                                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                                .setDatabaseUrl(Configuration.getInstance().getDB_URL())
-//                                .build()
-//                ))
-//        );
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl(Configuration.getInstance().getDB_URL())
                 .build();
         FirebaseApp.initializeApp(options);
-
+        System.out.println(Configuration.getInstance().getDB_URL());
 //        System.out.printf("Server: Firebase app name %s\n", app.getName());
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -124,6 +116,7 @@ public class Server {
             public void onCancelled(DatabaseError error) {
             }
         });
+
     }
 
     private class ServerService implements Runnable {
