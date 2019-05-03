@@ -107,18 +107,18 @@ public class Server {
         FirebaseApp app = DBManager.getApp();
 //        System.out.printf("Server: Firebase app name %s\n", app.getName());
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object document = dataSnapshot.getValue();
-                System.out.println(document);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Object document = dataSnapshot.getValue();
+//                System.out.println(document);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//            }
+//        });
     }
 
     private class ServerService implements Runnable {
