@@ -96,15 +96,20 @@ public class Server {
         // TODO: https://github.com/bane73/firebase4j
         // initialize database connection
         FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
-        DBManager.getInstance().setApp(
-                FirebaseApp.initializeApp(DBManager.getInstance().setOptions(
-                        new FirebaseOptions.Builder()
-                                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                                .setDatabaseUrl(Configuration.getInstance().getDB_URL())
-                                .build()
-                ))
-        );
-        FirebaseApp app = DBManager.getApp();
+//        DBManager.getInstance().setApp(
+//                FirebaseApp.initializeApp(DBManager.getInstance().setOptions(
+//                        new FirebaseOptions.Builder()
+//                                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                                .setDatabaseUrl(Configuration.getInstance().getDB_URL())
+//                                .build()
+//                ))
+//        );
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl(Configuration.getInstance().getDB_URL())
+                .build();
+        FirebaseApp.initializeApp(options);
+
 //        System.out.printf("Server: Firebase app name %s\n", app.getName());
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

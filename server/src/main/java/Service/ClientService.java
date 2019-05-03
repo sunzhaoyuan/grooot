@@ -48,5 +48,6 @@ public class ClientService implements Runnable{
 
     private void parseRes(String line) {
         // TODO: handle client responds
+        System.out.println("Client: " + line);
     }
 }
