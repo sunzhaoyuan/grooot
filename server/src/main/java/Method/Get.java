@@ -1,11 +1,10 @@
-package MethodUtil;
+package Method;
 
 import com.google.firebase.database.*;
 
 import java.io.DataOutputStream;
-import java.net.Socket;
 
-public class GetUtil {
+public class Get {
 
     public static boolean getAndSendCharacters(DataOutputStream out) {
         System.out.println("Retriving Characters list");
