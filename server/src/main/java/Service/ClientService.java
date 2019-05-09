@@ -52,12 +52,12 @@ public class ClientService implements Runnable {
     /**
      * A line should contains [method] [method-body...] [backslash - as terminator]
      * <p>
-     * Get [Characters | Chatrooms | Users]
-     * - Characters : Get a list of all characters
-     * - Chatrooms : Get a list of all chatrooms
-     * - Users: Get a list of all users
+     * Get [Characters | Chatrooms | Users] [option]
+     * - Characters 			: Get a list of all characters
+     * - Chatrooms [chatroom id]	: Get a list of all chatrooms or by chatroom id
+     * - Users [user id] 			: Get a list of all users or by userid
      * <p>
-     * Message [from user] [to user] [message body]
+     * Message [from user] [to chatroom] [message body]
      *
      * @param line
      */

@@ -9,11 +9,13 @@ public class Get {
     public static boolean getAndSendCharacters(DataOutputStream out) {
         System.out.println("Retriving Characters list");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("Characters").addListenerForSingleValueEvent(
+        ref.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-
+                        String character = snapshot.child("Characters").toString();
+                        System.out.println(character);
+                        //TODO
                     }
 
                     @Override
@@ -27,6 +29,20 @@ public class Get {
     }
 
     public static boolean getAndSendChatrooms(DataOutputStream out) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                String chatroom = snapshot.child("Chatrooms").toString();
+                System.out.println(chatroom);
+                //TODO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
         return true;
     }
 
