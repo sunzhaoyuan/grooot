@@ -101,22 +101,6 @@ public class Server {
                 .setDatabaseUrl(Configuration.getInstance().getDB_URL())
                 .build();
         FirebaseApp.initializeApp(options);
-        System.out.println(Configuration.getInstance().getDB_URL());
-//        System.out.printf("Server: Firebase app name %s\n", app.getName());
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object document = dataSnapshot.getValue();
-                System.out.println(document);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
-
     }
 
     private class ServerService implements Runnable {
@@ -154,6 +138,12 @@ public class Server {
         CompletableFuture<Void> closeFuture = CompletableFuture.runAsync(
                 () -> {
                     // TODO: handle close
+                    try {
+                        serverSocket.close();
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
         );
         return closeFuture;
