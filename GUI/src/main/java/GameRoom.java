@@ -545,7 +545,7 @@ public class GameRoom extends JFrame {
 				try {
 					in = new DataInputStream(client.getInputStream());
 					textArea_1.append("Alice: " + message + "\n");
-					textArea_1.append("Response: " + in.readUTF());
+					textArea_1.append("Response: " + in.readUTF() + "\n");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
