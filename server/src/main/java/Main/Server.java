@@ -7,16 +7,18 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
 
 import java.io.FileInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static java.lang.System.exit;
 
 public class Server {
-
     private Socket clientSocket = null;
     private ServerSocket serverSocket = null;
 
