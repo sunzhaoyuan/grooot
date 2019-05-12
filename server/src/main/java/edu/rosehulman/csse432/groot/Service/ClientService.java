@@ -1,4 +1,4 @@
-package Service;
+package edu.rosehulman.csse432.groot.Service;
 
 import java.io.*;
 import java.net.Socket;
@@ -72,17 +72,17 @@ public class ClientService implements Runnable {
             String determinator = elements[1];
             switch (determinator) {
                 case "Characters":
-                    assert Method.Get.getAndSendCharacters(out) : "getAndSendCharacters returns false";
+                    assert edu.rosehulman.csse432.groot.Method.Get.getAndSendCharacters(out) : "getAndSendCharacters returns false";
                     break;
                 case "Chatrooms":
-                    assert Method.Get.getAndSendChatrooms(out) : "getAndSendChatrooms returns false";
+                    assert edu.rosehulman.csse432.groot.Method.Get.getAndSendChatrooms(out) : "getAndSendChatrooms returns false";
                     break;
                 default:
                     System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
             }
         } else if (method.equals("Message")) {
             assert elements.length == 4 : "Message method: Element length is not correct";
-            assert Method.Message.sendMessage(out, elements[1], elements[2], elements[3]);
+            assert edu.rosehulman.csse432.groot.Method.Message.sendMessage(out, elements[1], elements[2], elements[3]);
         } else {
             System.err.printf("[%s] method not support.", method);
         }

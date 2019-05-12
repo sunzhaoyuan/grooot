@@ -1,7 +1,7 @@
 {
   "server": {
     "port": "5000",
-    "secret": "/Users/liuz6/Desktop/work/CSSE432/groot-secret.json"
+    "secret": "/Users/sun/Downloads/groot-new-secret.json"
   },
   "database": {
     "db_instance": "",

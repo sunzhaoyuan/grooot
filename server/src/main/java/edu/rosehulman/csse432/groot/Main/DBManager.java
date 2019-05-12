@@ -1,4 +1,4 @@
-//package Main;
+//package edu.rosehulman.csse432.groot.Main;
 //
 //import com.google.auth.oauth2.GoogleCredentials;
 //import com.google.firebase.FirebaseApp;
