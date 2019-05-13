@@ -52,14 +52,15 @@ public class ClientService implements Runnable {
     /**
      * A line should contains [method] [method-body...] [backslash - as terminator]
      * <p>
-     * Get [Characters | Chatrooms | Users] [option]
-     * - Characters 			: Get a list of all characters
-     * - Chatrooms [chatroom id]	: Get a list of all chatrooms or by chatroom id
-     * - Users [user id] 			: Get a list of all users or by userid
+     * Get [Chatroom] - Get the first Chatroom in the queue, return HostName
      * <p>
-     * Message [from user] [to chatroom] [message body]
+     * Create [User | Chatroom] [options]
+     * Create User [id]   - Save a new User in the table with the id provided, return status code
+     * Create Chatroom [creator id] [roome name]   - Save a new Chatroom in the table, return status code
+     * <p>
+     * Message [chatroom name] [sender] [text] - Save a new message in the table, return status code
      *
-     * @param line
+     * @param line the message that client send to server
      */
     private void parseRes(String line) {
         // TODO: handle client responds
@@ -75,7 +76,7 @@ public class ClientService implements Runnable {
                     assert edu.rosehulman.csse432.groot.method.Get.getAndSendCharacters(out) : "getAndSendCharacters returns false";
                     break;
                 case "Chatrooms":
-                    assert edu.rosehulman.csse432.groot.method.Get.getAndSendChatrooms(out) : "getAndSendChatrooms returns false";
+                    assert edu.rosehulman.csse432.groot.method.Get.getChatroomAndSendCrator(out) : "getChatroomAndSendCrator returns false";
                     break;
                 default:
                     System.err.printf("Bad Request: [%s] in Get method not available.", determinator);

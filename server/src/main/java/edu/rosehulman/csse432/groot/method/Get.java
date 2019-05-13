@@ -6,6 +6,24 @@ import java.io.DataOutputStream;
 
 public class Get {
 
+    public static boolean getChatroomAndSendCrator(DataOutputStream out) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                String chatroom = snapshot.child("Chatrooms").toString();
+                System.out.println(chatroom);
+                //TODO
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+        return true;
+    }
+
     @Deprecated
     public static boolean getAndSendCharacters(DataOutputStream out) {
         System.out.println("Retriving Characters list");
@@ -26,24 +44,6 @@ public class Get {
                 }
         );
         System.out.println("Send out Characters list");
-        return true;
-    }
-
-    public static boolean getAndSendChatrooms(DataOutputStream out) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                String chatroom = snapshot.child("Chatrooms").toString();
-                System.out.println(chatroom);
-                //TODO
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
         return true;
     }
 
