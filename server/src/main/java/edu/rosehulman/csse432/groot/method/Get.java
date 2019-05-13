@@ -1,4 +1,4 @@
-package edu.rosehulman.csse432.groot.Method;
+package edu.rosehulman.csse432.groot.method;
 
 import com.google.firebase.database.*;
 
@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 
 public class Get {
 
+    @Deprecated
     public static boolean getAndSendCharacters(DataOutputStream out) {
         System.out.println("Retriving Characters list");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

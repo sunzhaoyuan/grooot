@@ -1,4 +1,4 @@
-package edu.rosehulman.csse432.groot.Method.Util;
+package edu.rosehulman.csse432.groot.util;
 
 import java.io.DataOutputStream;
 

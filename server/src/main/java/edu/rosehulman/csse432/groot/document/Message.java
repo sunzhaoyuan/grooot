@@ -1,4 +1,4 @@
-package edu.rosehulman.csse432.groot.Document;
+package edu.rosehulman.csse432.groot.document;
 
 public class Message {
     public Message() {

@@ -1,4 +1,4 @@
-package edu.rosehulman.csse432.groot.Main;
+package edu.rosehulman.csse432.groot.main;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

@@ -8,13 +8,13 @@ group 'grooot'
 version '1.0'
 
 sourceCompatibility = 1.8
-mainClassName = 'edu.rosehulman.csse432.groot.Main.Launcher'
+mainClassName = 'edu.rosehulman.csse432.groot.main.Launcher'
 
 task allJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Server-All-Jar',
                 'Implementation-Version': version,
-                'edu.rosehulman.csse432.groot.Main-Class': 'edu.rosehulman.csse432.groot.Main.Launcher'
+                'edu.rosehulman.csse432.groot.main-Class': 'edu.rosehulman.csse432.groot.main.Launcher'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect {it.isDirectory() ? it:zipTree(it)}}

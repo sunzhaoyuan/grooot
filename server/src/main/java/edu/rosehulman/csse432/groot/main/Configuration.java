@@ -1,4 +1,4 @@
-package edu.rosehulman.csse432.groot.Main;
+package edu.rosehulman.csse432.groot.main;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

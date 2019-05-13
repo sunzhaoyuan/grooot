@@ -1,6 +1,6 @@
-package edu.rosehulman.csse432.groot.Main;
+package edu.rosehulman.csse432.groot.main;
 
-import edu.rosehulman.csse432.groot.Service.ClientService;
+import edu.rosehulman.csse432.groot.service.ClientService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
