@@ -16,7 +16,6 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
-@Deprecated
 public class FirebaseUT {
 
     @Test

@@ -6,12 +6,12 @@ import java.io.DataOutputStream;
 
 public class Get {
 
-    public static boolean getChatroomAndSendCrator(DataOutputStream out) {
+    public static boolean getChatroomAndSendCreator(DataOutputStream out) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.child("ChatRooms").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                String chatroom = snapshot.child("Chatrooms").toString();
+                String chatroom = snapshot.toString();
                 System.out.println(chatroom);
                 //TODO
             }

@@ -1,5 +1,9 @@
 package edu.rosehulman.csse432.groot.service;
 
+import edu.rosehulman.csse432.groot.method.Create;
+import edu.rosehulman.csse432.groot.method.Get;
+import edu.rosehulman.csse432.groot.method.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -21,7 +25,7 @@ public class ClientService implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Get rid of it, useless implementation
+        // Deprecated, useless implementation
 //        try {
 //            String input = in.readUTF();
 //            while (!input.equals("HELLO")) {
@@ -62,30 +66,69 @@ public class ClientService implements Runnable {
      *
      * @param line the message that client send to server
      */
-    private void parseRes(String line) {
+    private void parseRes(String line) throws IOException {
         // TODO: handle client responds
         System.out.println("Client: " + line);
         String[] elements = line.trim().split(" ");
         assert elements.length > 1 : "Elements length not correct.";
 
         String method = elements[0];
-        if (method.equals("Get")) {
-            String determinator = elements[1];
-            switch (determinator) {
-                case "Characters":
-                    assert edu.rosehulman.csse432.groot.method.Get.getAndSendCharacters(out) : "getAndSendCharacters returns false";
-                    break;
-                case "Chatrooms":
-                    assert edu.rosehulman.csse432.groot.method.Get.getChatroomAndSendCrator(out) : "getChatroomAndSendCrator returns false";
-                    break;
-                default:
-                    System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
+        switch (method) {
+            case "Get": {
+                handleGet(elements);
+                break;
             }
-        } else if (method.equals("Message")) {
-            assert elements.length == 4 : "Message method: Element length is not correct";
-            assert edu.rosehulman.csse432.groot.method.Message.sendMessage(out, elements[1], elements[2], elements[3]);
-        } else {
-            System.err.printf("[%s] method not support.", method);
+            case "Message":
+                handleMessage(elements);
+                break;
+            case "Create": {
+                handleCreate(elements);
+                break;
+            }
+            default:
+                System.err.printf("[%s] method not support.", method);
+                break;
+        }
+    }
+
+    private void handleGet(String[] elements) throws IOException {
+        String determinator = elements[1];
+        switch (determinator) {
+            case "Chatrooms":
+                assert Get.getChatroomAndSendCreator(out) : "getChatroomAndSendCreator returns false";
+                break;
+            default:
+                System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
+                out.writeUTF(String.format("400 Bad Request.\n[%s] in Get method not available.", determinator));
+        }
+    }
+
+    private void handleMessage(String[] elements) throws IOException {
+        if (elements.length != 4) {
+            out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
+            return;
+        }
+        assert Message.sendMessage(out, elements[1], elements[2], elements[3]);
+    }
+
+    private void handleCreate(String[] elements) throws IOException {
+        String determinator = elements[1];
+        switch (determinator) {
+            case "User":
+                if (elements.length != 3) {
+                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+                }
+                assert Create.CreateUser(elements[2]);
+                break;
+            case "Chatroom":
+                if (elements.length != 4) {
+                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+                }
+                assert Create.CreateChatroom(elements[2], elements[3]);
+                break;
+            default:
+                System.err.printf("400 Bad Request\n[%s] in Get method not available.", determinator);
+                out.writeUTF(String.format("Bad Request: [%s] in Get method not available.", determinator));
         }
     }
 }
