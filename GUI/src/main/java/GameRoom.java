@@ -142,8 +142,10 @@ public class GameRoom extends JFrame {
 		JPanel tictactoePanel = new JPanel();
 		JPanel scoresPanel = new JPanel();
 		JPanel characterPanel = new JPanel();
+		JPanel selectPanel = new JPanel();
 
 		characterPanel.setVisible(false);
+		selectPanel.setVisible(false);
 		controlPanel.setVisible(false);
 		signupPanel.setVisible(false);
 		loginPanel.setVisible(true);
@@ -158,6 +160,7 @@ public class GameRoom extends JFrame {
 		windows = (CardLayout) contentPane.getLayout();
 
 		contentPane.add(loginPanel, "Login");
+		contentPane.add(selectPanel, "select");
 		contentPane.add(characterPanel, "character");
 
 		contentPane.add(signupPanel, "Signup");
@@ -166,7 +169,7 @@ public class GameRoom extends JFrame {
 		contentPane.add(tictactoePanel, "TicTacToe");
 		contentPane.add(scoresPanel, "Scores");
 		scoresPanel.setLayout(null);
-
+		this.setLocationRelativeTo(null);
 		// JLabel lblTicTacToe = new JLabel("Tic Tac Toe");
 		// lblTicTacToe.setHorizontalAlignment(SwingConstants.CENTER);
 		// lblTicTacToe.setFont(new Font("SansSerif", Font.BOLD, 22));
@@ -313,20 +316,61 @@ public class GameRoom extends JFrame {
 		 * ===========================================================
 		 */
 
-		JButton btnAlice = new JButton("Alice");
-		btnAlice.setBounds(403, 250, 130, 29);
+		JButton btnCharacter = new JButton("Choose Character!");
+		btnCharacter.setBounds(403, 250, 130, 29);
 
-		JButton btnArthur = new JButton("Arthur");
-		btnArthur.setBounds(403, 250, 130, 29);
+		JButton btnPlay = new JButton("Play Game!");
+		btnPlay.setBounds(403, 250, 130, 29);
 
-		JButton btnGroot = new JButton("Groot");
-		btnGroot.setBounds(403, 250, 130, 29);
+		characterPanel.add(btnCharacter, btnCharacter.CENTER_ALIGNMENT);
+		characterPanel.add(btnPlay, btnPlay.CENTER_ALIGNMENT);
 
-		characterPanel.add(btnAlice);
-		characterPanel.add(btnArthur);
-		characterPanel.add(btnGroot);
+		btnCharacter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				windows.show(contentPane, "select");
+				// newpass.setText("");
+				// confirmpass.setText("");
+				// welcomeLabel.setText("Welcome Alice !");
+				// usersCombo.removeAllItems();
+				//
+				// btnGetGames.doClick();
+			}
+		});
+		btnPlay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				windows.show(contentPane, "select");
+				// newpass.setText("");
+				// confirmpass.setText("");
+				// welcomeLabel.setText("Welcome Arthur !");
+				// usersCombo.removeAllItems();
+				//
+				// btnGetGames.doClick();
+			}
+		});
 
-		btnAlice.addActionListener(new ActionListener() {
+		/*
+		 * =========================================================== Select
+		 * ===========================================================
+		 */
+
+		JButton btn1 = new JButton("Character 1");
+		btn1.setBounds(403, 250, 130, 29);
+
+		JButton btn2 = new JButton("Character 2");
+		btn2.setBounds(403, 250, 130, 29);
+		JButton btn3 = new JButton("Character 3");
+		btn3.setBounds(403, 250, 130, 29);
+		JButton btn4 = new JButton("Character 4");
+		btn4.setBounds(403, 250, 130, 29);
+
+		selectPanel.add(btn1, btn1.CENTER_ALIGNMENT);
+		selectPanel.add(btn2, btn2.CENTER_ALIGNMENT);
+		selectPanel.add(btn3, btn3.CENTER_ALIGNMENT);
+		selectPanel.add(btn4, btn4.CENTER_ALIGNMENT);
+
+		btn1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "Controlpanel");
@@ -338,7 +382,8 @@ public class GameRoom extends JFrame {
 				btnGetGames.doClick();
 			}
 		});
-		btnArthur.addActionListener(new ActionListener() {
+
+		btn2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "Controlpanel");
@@ -350,13 +395,25 @@ public class GameRoom extends JFrame {
 				btnGetGames.doClick();
 			}
 		});
-		btnGroot.addActionListener(new ActionListener() {
+		btn3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "Controlpanel");
 				newpass.setText("");
 				confirmpass.setText("");
-				welcomeLabel.setText("Welcome Groot !");
+				welcomeLabel.setText("Welcome Arthur !");
+				usersCombo.removeAllItems();
+
+				btnGetGames.doClick();
+			}
+		});
+		btn4.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				windows.show(contentPane, "Controlpanel");
+				newpass.setText("");
+				confirmpass.setText("");
+				welcomeLabel.setText("Welcome Arthur !");
 				usersCombo.removeAllItems();
 
 				btnGetGames.doClick();
