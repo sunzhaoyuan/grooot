@@ -359,7 +359,7 @@ public class GameRoom extends JFrame {
 					//out.writeUTF("Hello from " + client.getLocalSocketAddress());
 
 					DataInputStream in = new DataInputStream(client.getInputStream());
-					System.out.println("Response:" + in.readUTF());
+//					System.out.println("Response:" + in.readUTF());
 
 					String username = textuser.getText();
 					String password = textpass.getText();
