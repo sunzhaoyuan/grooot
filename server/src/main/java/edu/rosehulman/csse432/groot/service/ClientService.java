@@ -103,7 +103,7 @@ public class ClientService implements Runnable {
                     out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
                     return;
                 }
-                assert Get.getChatroomAndSendCreator(out, elements[2]) : "getChatroomAndSendCreator returns false";
+                Get.getChatroomAndSendCreator(out, elements[2]);
                 break;
             default:
                 System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
@@ -126,13 +126,13 @@ public class ClientService implements Runnable {
                 if (elements.length != 3) {
                     out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
                 }
-                assert Create.CreateUser(elements[2]);
+                Create.createUser(out, elements[2]);
                 break;
             case "Chatroom":
                 if (elements.length != 4) {
                     out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
                 }
-                assert Create.CreateChatroom(elements[2], elements[3]);
+                Create.createChatroom(out, elements[2], elements[3]);
                 break;
             default:
                 System.err.printf("400 Bad Request\n[%s] in Get method not available.", determinator);

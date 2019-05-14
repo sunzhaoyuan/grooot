@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class Get {
 
-    public static boolean getChatroomAndSendCreator(DataOutputStream out, String clientname) {
+    public static void getChatroomAndSendCreator(DataOutputStream out, String clientname) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         // Get the first waiting chatroom, TODO: Not necessarily be the "time first"
         ref.child("ChatRooms")
@@ -36,18 +36,30 @@ public class Get {
                                     System.out.println(hostName);
 
                                     // send hostname back to client
-                                    try {
-                                        out.writeUTF(hostName);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+//                                    try {
+//                                        out.writeUTF(hostName);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
 
                                     // update waiting to false and clientname to the real clientname
                                     chatRoom.setClientName(clientname);
                                     chatRoom.setWaiting(false);
                                     Map<String, Object> map = new HashMap<>();
                                     map.put(chatRoom.getRoomName(), chatRoom);
-                                    FirebaseDatabase.getInstance().getReference("ChatRooms").updateChildrenAsync(map);
+                                    FirebaseDatabase.getInstance().getReference("ChatRooms")
+                                            .updateChildren(map, (error, ref1) -> {
+                                                try {
+                                                    if (error != null) {
+                                                        out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
+                                                    } else {
+                                                        // send hostname back to client
+                                                        out.writeUTF(hostName);
+                                                    }
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
                                 });
                     }
 
@@ -56,7 +68,6 @@ public class Get {
 
                     }
                 });
-        return true;
     }
 
     @Deprecated
