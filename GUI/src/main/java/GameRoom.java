@@ -356,7 +356,7 @@ public class GameRoom extends JFrame {
 
 					DataOutputStream out = new DataOutputStream(client.getOutputStream());
 
-					out.writeUTF("Hello from " + client.getLocalSocketAddress());
+					//out.writeUTF("Hello from " + client.getLocalSocketAddress());
 
 					DataInputStream in = new DataInputStream(client.getInputStream());
 					System.out.println("Response:" + in.readUTF());
