@@ -56,7 +56,7 @@ public class ClientService implements Runnable {
     /**
      * A line should contains [method] [method-body...] [backslash - as terminator]
      * <p>
-     * Get [Chatroom] - Get the first Chatroom in the queue, return HostName
+     * Get [Chatroom] [client id] - Get the first Chatroom in the queue, return HostName
      * <p>
      * Create [User | Chatroom] [options]
      * Create User [id]   - Save a new User in the table with the id provided, return status code
@@ -75,14 +75,14 @@ public class ClientService implements Runnable {
         String method = elements[0];
         switch (method) {
             case "Get": {
-                handleGet(elements);
+                get(elements);
                 break;
             }
             case "Message":
-                handleMessage(elements);
+                message(elements);
                 break;
             case "Create": {
-                handleCreate(elements);
+                create(elements);
                 break;
             }
             default:
@@ -91,11 +91,19 @@ public class ClientService implements Runnable {
         }
     }
 
-    private void handleGet(String[] elements) throws IOException {
+    private void get(String[] elements) throws IOException {
+        if (elements.length < 2) {
+            out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+            return;
+        }
         String determinator = elements[1];
         switch (determinator) {
             case "Chatrooms":
-                assert Get.getChatroomAndSendCreator(out) : "getChatroomAndSendCreator returns false";
+                if (elements.length != 3) {
+                    out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+                    return;
+                }
+                assert Get.getChatroomAndSendCreator(out, elements[2]) : "getChatroomAndSendCreator returns false";
                 break;
             default:
                 System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
@@ -103,7 +111,7 @@ public class ClientService implements Runnable {
         }
     }
 
-    private void handleMessage(String[] elements) throws IOException {
+    private void message(String[] elements) throws IOException {
         if (elements.length != 4) {
             out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
             return;
@@ -111,7 +119,7 @@ public class ClientService implements Runnable {
         assert Message.sendMessage(out, elements[1], elements[2], elements[3]);
     }
 
-    private void handleCreate(String[] elements) throws IOException {
+    private void create(String[] elements) throws IOException {
         String determinator = elements[1];
         switch (determinator) {
             case "User":

@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ChatServer {
 	private boolean started = false;
 	private List<ChatThread> chatThreads = new ArrayList<ChatThread>();
