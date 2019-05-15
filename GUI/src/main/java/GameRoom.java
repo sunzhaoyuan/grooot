@@ -275,22 +275,26 @@ public class GameRoom extends JFrame {
 				try {
 					out = new DataOutputStream(client.getOutputStream());
 					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 
 				DataInputStream in;
 				try {
+
 					in = new DataInputStream(client.getInputStream());
-					if (in.readUTF().contains("200")) {
+					String input = in.readUTF();
+					if (input.contains("200")) {
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
 						welcomeLabel.setText("Welcome Character1!");
 						usersCombo.removeAllItems();
 					}
+
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+
 					e1.printStackTrace();
 				}
 
@@ -305,6 +309,7 @@ public class GameRoom extends JFrame {
 				try {
 					out = new DataOutputStream(client.getOutputStream());
 					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -333,6 +338,7 @@ public class GameRoom extends JFrame {
 				try {
 					out = new DataOutputStream(client.getOutputStream());
 					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
 				} catch (IOException e1) {
 
 					e1.printStackTrace();
@@ -361,6 +367,7 @@ public class GameRoom extends JFrame {
 				try {
 					out = new DataOutputStream(client.getOutputStream());
 					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

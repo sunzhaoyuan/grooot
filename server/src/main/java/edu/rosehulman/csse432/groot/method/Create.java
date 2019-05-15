@@ -16,50 +16,49 @@ import java.io.IOException;
 
 public class Create {
 
-    public static void createUser(DataOutputStream out, String userid) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.push().setValue(new User(userid),
-                (error, ref1) -> {
-                    try {
-                        if (error != null) {
-                            out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
-                        } else {
-                            out.writeUTF("200");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-    }
+	public static void createUser(DataOutputStream out, String userid) {
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+		ref.push().setValue(new User(userid), (error, ref1) -> {
+			try {
+				if (error != null) {
+					out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
+				} else {
+					out.writeUTF("200");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
-    public static void createChatroom(DataOutputStream out, String creatorid, String roomname) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ChatRooms");
-        ref.push().setValue(new ChatRoom("REPLACE_ME", creatorid, roomname, true),
-                (error, ref1) -> {
-                    try {
-                        if (error != null) {
-                            out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
-                        } else {
-                            out.writeUTF("200");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-    }
+	public static void createChatroom(DataOutputStream out, String creatorid, String roomname) {
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ChatRooms");
+		ref.push().setValue(new ChatRoom("REPLACE_ME", creatorid, roomname, true), (error, ref1) -> {
+			try {
+				if (error != null) {
+					out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
+					out.flush();
+				} else {
+					out.writeUTF("200");
+					out.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
-    public static void main(String[] args) throws IOException {
-        FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl(Configuration.getInstance().getDB_URL())
-                .build();
-        FirebaseApp.initializeApp(options);
+	public static void main(String[] args) throws IOException {
+		FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
+		FirebaseOptions options = new FirebaseOptions.Builder()
+				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				.setDatabaseUrl(Configuration.getInstance().getDB_URL()).build();
+		FirebaseApp.initializeApp(options);
 
-//        createUser(null, "testuser_3");
-//        createChatroom(null, "testuser_3", "test_create_room_1");
-//
-//        while (true)
-//            ;
-    }
+		// createUser(null, "testuser_3");
+		// createChatroom(null, "testuser_3", "test_create_room_1");
+		//
+		// while (true)
+		// ;
+	}
 }
