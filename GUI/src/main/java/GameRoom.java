@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JButton;
@@ -85,24 +84,14 @@ public class GameRoom extends JFrame {
 	private JPasswordField newpass;
 	private JPasswordField confirmpass;
 	private static JButton[][] buttons;
-	private static JButton resetgame1;
 
 	private static CardLayout windows;
 
-	private static int moveCounter = 9;
-	private static boolean gameWon = false;
-	private static int WhoseTurn = 1;
-
-	private static int loginTrials = 0;
-	private static int maxLoginTrials = 5;
-	private static Boolean loginFlag;
-	private static String loggedinUser = "";
-	private static String loggedinName = "";
-	private static String opponentUsername = "";
-	private static Boolean addFlag;
 	private JTextField chatMsg;
 
 	private JTextField textField;
+	private String creatorID = "";
+	private String roomID = "";
 	Socket client;
 
 	/**
@@ -119,8 +108,6 @@ public class GameRoom extends JFrame {
 		JPanel controlPanel = new JPanel();
 
 		JPanel loginPanel = new JPanel();
-		JPanel modifyPanel = new JPanel();
-		JPanel tictactoePanel = new JPanel();
 
 		JPanel characterPanel = new JPanel();
 		JPanel selectPanel = new JPanel();
@@ -130,8 +117,6 @@ public class GameRoom extends JFrame {
 		controlPanel.setVisible(false);
 
 		loginPanel.setVisible(true);
-		modifyPanel.setVisible(false);
-		tictactoePanel.setVisible(false);
 
 		loginPanel.setLayout(null);
 
@@ -145,8 +130,6 @@ public class GameRoom extends JFrame {
 		contentPane.add(characterPanel, "character");
 
 		contentPane.add(controlPanel, "Controlpanel");
-
-		contentPane.add(tictactoePanel, "TicTacToe");
 
 		this.setLocationRelativeTo(null);
 
@@ -181,8 +164,6 @@ public class GameRoom extends JFrame {
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		JPanel userChatP = new JPanel();
-		// chatTab.addTab("Private Chat", null, userChatP, null);
-		// userChatP.setLayout(null);
 
 		JPanel globalChatP = new JPanel();
 		chatTab.addTab("Global Chat", null, globalChatP, null);
@@ -222,7 +203,7 @@ public class GameRoom extends JFrame {
 		textpass.setBounds(403, 212, 130, 26);
 		loginPanel.add(textpass);
 		textpass.setColumns(10);
-		JButton btnGetGames = new JButton("Get Games");
+		// JButton btnGetGames = new JButton("Get Games");
 
 		/*
 		 * =========================================================== Character
@@ -242,24 +223,41 @@ public class GameRoom extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "select");
-				// newpass.setText("");
-				// confirmpass.setText("");
-				// welcomeLabel.setText("Welcome Alice !");
-				// usersCombo.removeAllItems();
-				//
-				// btnGetGames.doClick();
+
 			}
 		});
 		btnPlay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "select");
-				// newpass.setText("");
-				// confirmpass.setText("");
-				// welcomeLabel.setText("Welcome Arthur !");
-				// usersCombo.removeAllItems();
-				//
-				// btnGetGames.doClick();
+
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Get " + "Chatroom " + creatorID);
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					System.out.print(input);
+					if (input.contains("200")) {
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
 			}
 		});
 
@@ -270,7 +268,6 @@ public class GameRoom extends JFrame {
 
 		JButton btn1 = new JButton("Character 1");
 		btn1.setBounds(403, 250, 130, 29);
-
 		JButton btn2 = new JButton("Character 2");
 		btn2.setBounds(403, 250, 130, 29);
 		JButton btn3 = new JButton("Character 3");
@@ -286,50 +283,121 @@ public class GameRoom extends JFrame {
 		btn1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Controlpanel");
-				newpass.setText("");
-				confirmpass.setText("");
-				welcomeLabel.setText("Welcome Alice !");
-				usersCombo.removeAllItems();
 
-				btnGetGames.doClick();
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				DataInputStream in;
+				try {
+
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					if (input.contains("200")) {
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
 			}
 		});
 
 		btn2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Controlpanel");
-				newpass.setText("");
-				confirmpass.setText("");
-				welcomeLabel.setText("Welcome Arthur !");
-				usersCombo.removeAllItems();
 
-				btnGetGames.doClick();
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		btn3.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Controlpanel");
-				newpass.setText("");
-				confirmpass.setText("");
-				welcomeLabel.setText("Welcome Arthur !");
-				usersCombo.removeAllItems();
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
 
-				btnGetGames.doClick();
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		btn4.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Controlpanel");
-				newpass.setText("");
-				confirmpass.setText("");
-				welcomeLabel.setText("Welcome Arthur !");
-				usersCombo.removeAllItems();
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 
-				btnGetGames.doClick();
 			}
 		});
 
@@ -354,26 +422,33 @@ public class GameRoom extends JFrame {
 					System.out.println("connected to:" + ip + " Port number:" + port);
 					System.out.println("Connection succeed!");
 
-					DataOutputStream out = new DataOutputStream(client.getOutputStream());
-
-					//out.writeUTF("Hello from " + client.getLocalSocketAddress());
-
-					DataInputStream in = new DataInputStream(client.getInputStream());
-//					System.out.println("Response:" + in.readUTF());
-
-					String username = textuser.getText();
+					// String username = textuser.getText();
 					String password = textpass.getText();
 
-					if (username.equals("") || password.equals("")) {
-						username = password = " ";
+					creatorID = textuser.getText();
 
-						textArea.setText("");
-						loggedinUser = username; // remember username
-						loginTrials = 0;
-						windows.show(contentPane, "character");
-
+					DataOutputStream out;
+					try {
+						out = new DataOutputStream(client.getOutputStream());
+						out.writeUTF("Create User " + creatorID);
+						out.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
-					// client.close();
+
+					DataInputStream in;
+					try {
+
+						in = new DataInputStream(client.getInputStream());
+						String input = in.readUTF();
+						if (input.contains("200")) {
+							windows.show(contentPane, "character");
+						}
+
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -471,13 +546,11 @@ public class GameRoom extends JFrame {
 					e1.printStackTrace();
 				}
 				windows.show(contentPane, "Login");
-				textuser.setText(loggedinUser);
-				textpass.setText("");
-				loggedinUser = "";
+				// textuser.setText(loggedinUser);
+				// textpass.setText("");
+				// loggedinUser = "";
 			}
 		});
-
-		btnGetGames.setBounds(558, 46, 107, 28);
 
 		// ENTER key for sending message
 		chatMsg.addActionListener(new ActionListener() {

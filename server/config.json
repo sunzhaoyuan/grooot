@@ -1,7 +1,7 @@
 {
   "server": {
     "port": "5000",
-    "secret": "/Users/sun/Downloads/groot-new-secret.json"
+    "secret": "/Users/liuz6/Downloads/groot-new-secret.json"
   },
   "database": {
     "db_instance": "",
