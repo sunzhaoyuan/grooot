@@ -245,6 +245,29 @@ public class GameRoom extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "select");
 
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create User " + creatorID);
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				DataInputStream in;
+				try {
+
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					if (input.contains("200")) {
+						windows.show(characterPanel, "character");
+					}
+
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
 			}
 		});
 
@@ -409,23 +432,32 @@ public class GameRoom extends JFrame {
 					System.out.println("connected to:" + ip + " Port number:" + port);
 					System.out.println("Connection succeed!");
 
-					DataOutputStream out = new DataOutputStream(client.getOutputStream());
-
-					DataInputStream in = new DataInputStream(client.getInputStream());
-
-					String username = textuser.getText();
+					// String username = textuser.getText();
 					String password = textpass.getText();
 
 					creatorID = textuser.getText();
 
-					if (username.equals("") || password.equals("")) {
-						username = password = " ";
+					DataOutputStream out;
+					try {
+						out = new DataOutputStream(client.getOutputStream());
+						out.writeUTF("Create User " + creatorID);
+						out.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 
-						textArea.setText("");
-						loggedinUser = username; // remember username
-						loginTrials = 0;
-						windows.show(contentPane, "character");
+					DataInputStream in;
+					try {
 
+						in = new DataInputStream(client.getInputStream());
+						String input = in.readUTF();
+						if (input.contains("200")) {
+							windows.show(contentPane, "character");
+						}
+
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();

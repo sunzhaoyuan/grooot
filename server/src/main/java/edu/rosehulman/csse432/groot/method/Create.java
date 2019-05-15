@@ -22,8 +22,10 @@ public class Create {
 			try {
 				if (error != null) {
 					out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
+					out.flush();
 				} else {
 					out.writeUTF("200");
+					out.flush();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
