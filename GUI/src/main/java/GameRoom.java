@@ -94,11 +94,10 @@ public class GameRoom extends JFrame {
 
 	private static int loginTrials = 0;
 	private static int maxLoginTrials = 5;
-	private static Boolean loginFlag;
+
 	private static String loggedinUser = "";
 	private static String loggedinName = "";
-	private static String opponentUsername = "";
-	private static Boolean addFlag;
+
 	private JTextField chatMsg;
 
 	private JTextField textField;
