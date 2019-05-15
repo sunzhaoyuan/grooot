@@ -274,7 +274,7 @@ public class GameRoom extends JFrame {
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + " _room");
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -304,7 +304,7 @@ public class GameRoom extends JFrame {
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + " _room");
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -332,7 +332,7 @@ public class GameRoom extends JFrame {
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + " _room");
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
 				} catch (IOException e1) {
 
 					e1.printStackTrace();
@@ -360,7 +360,7 @@ public class GameRoom extends JFrame {
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + " _room");
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
