@@ -3,6 +3,7 @@ package edu.rosehulman.csse432.groot.service;
 import edu.rosehulman.csse432.groot.method.Create;
 import edu.rosehulman.csse432.groot.method.Get;
 import edu.rosehulman.csse432.groot.method.Message;
+import edu.rosehulman.csse432.groot.util.IOUtil;
 
 import java.io.*;
 import java.net.Socket;
@@ -56,7 +57,7 @@ public class ClientService implements Runnable {
     /**
      * A line should contains [method] [method-body...] [backslash - as terminator]
      * <p>
-     * Get [Chatroom] [client id] - Get the first Chatroom in the queue, return HostName
+     * Get [Chatroom] [client id] - Get the first Chatroom in the queue, return RoomName
      * <p>
      * Create [User | Chatroom] [options]
      * Create User [id]   - Save a new User in the table with the id provided, return status code
@@ -93,30 +94,34 @@ public class ClientService implements Runnable {
 
     private void get(String[] elements) throws IOException {
         if (elements.length < 2) {
-            out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+//            out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+            IOUtil.sendData(out, "406", "Get method: Element length is not correct");
             return;
         }
         String determinator = elements[1];
         switch (determinator) {
-            case "Chatrooms":
+            case "Chatroom":
                 if (elements.length != 3) {
-                    out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+//                    out.writeUTF("406 Not Acceptable\nGet method: Element length is not correct");
+                    IOUtil.sendData(out, "406", "Get method: Element length is not correct");
                     return;
                 }
                 Get.getChatroomAndSendCreator(out, elements[2]);
                 break;
             default:
                 System.err.printf("Bad Request: [%s] in Get method not available.", determinator);
-                out.writeUTF(String.format("400 Bad Request.\n[%s] in Get method not available.", determinator));
+//                out.writeUTF(String.format("400 Bad Request.\n[%s] in Get method not available.", determinator));
+                IOUtil.sendData(out, "400", String.format("Bad Request. [%s] in \"Get\" method not available.", determinator));
         }
     }
 
     private void message(String[] elements) throws IOException {
         if (elements.length != 4) {
-            out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
+//            out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
+            IOUtil.sendData(out, "406", "Get method: Element length is not correct");
             return;
         }
-        assert Message.sendMessage(out, elements[1], elements[2], elements[3]);
+        Message.sendMessage(out, elements[1], elements[2], elements[3]);
     }
 
     private void create(String[] elements) throws IOException {
@@ -124,19 +129,22 @@ public class ClientService implements Runnable {
         switch (determinator) {
             case "User":
                 if (elements.length != 3) {
-                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+//                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+                    IOUtil.sendData(out, "406", "Get method: Element length is not correct");
                 }
                 Create.createUser(out, elements[2]);
                 break;
             case "Chatroom":
                 if (elements.length != 4) {
-                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+//                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
+                    IOUtil.sendData(out, "406", "Get method: Element length is not correct");
                 }
                 Create.createChatroom(out, elements[2], elements[3]);
                 break;
             default:
                 System.err.printf("400 Bad Request\n[%s] in Get method not available.", determinator);
-                out.writeUTF(String.format("Bad Request: [%s] in Get method not available.", determinator));
+//                out.writeUTF(String.format("Bad Request: [%s] in Get method not available.", determinator));
+                IOUtil.sendData(out, "400", String.format("Bad Request. [%s] in \"Get\" method not available.", determinator));
         }
     }
 }
