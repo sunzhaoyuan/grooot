@@ -84,24 +84,14 @@ public class GameRoom extends JFrame {
 	private JPasswordField newpass;
 	private JPasswordField confirmpass;
 	private static JButton[][] buttons;
-	private static JButton resetgame1;
 
 	private static CardLayout windows;
-
-	private static int moveCounter = 9;
-	private static boolean gameWon = false;
-	private static int WhoseTurn = 1;
-
-	private static int loginTrials = 0;
-	private static int maxLoginTrials = 5;
-
-	private static String loggedinUser = "";
-	private static String loggedinName = "";
 
 	private JTextField chatMsg;
 
 	private JTextField textField;
-	private String creatorID;
+	private String creatorID = "";
+	private String roomID = "";
 	Socket client;
 
 	/**
@@ -118,8 +108,6 @@ public class GameRoom extends JFrame {
 		JPanel controlPanel = new JPanel();
 
 		JPanel loginPanel = new JPanel();
-		JPanel modifyPanel = new JPanel();
-		JPanel tictactoePanel = new JPanel();
 
 		JPanel characterPanel = new JPanel();
 		JPanel selectPanel = new JPanel();
@@ -129,8 +117,6 @@ public class GameRoom extends JFrame {
 		controlPanel.setVisible(false);
 
 		loginPanel.setVisible(true);
-		modifyPanel.setVisible(false);
-		tictactoePanel.setVisible(false);
 
 		loginPanel.setLayout(null);
 
@@ -248,7 +234,7 @@ public class GameRoom extends JFrame {
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF("Create User " + creatorID);
+					out.writeUTF("Get " + "Chatroom " + creatorID);
 					out.flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -256,11 +242,15 @@ public class GameRoom extends JFrame {
 
 				DataInputStream in;
 				try {
-
 					in = new DataInputStream(client.getInputStream());
 					String input = in.readUTF();
+					System.out.print(input);
 					if (input.contains("200")) {
-						windows.show(characterPanel, "character");
+						windows.show(contentPane, "Controlpanel");
+						newpass.setText("");
+						confirmpass.setText("");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
 					}
 
 				} catch (IOException e1) {
@@ -312,7 +302,7 @@ public class GameRoom extends JFrame {
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
-						welcomeLabel.setText("Welcome Character1!");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
 
@@ -343,7 +333,7 @@ public class GameRoom extends JFrame {
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
-						welcomeLabel.setText("Welcome Character2!");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
 				} catch (IOException e1) {
@@ -373,7 +363,7 @@ public class GameRoom extends JFrame {
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
-						welcomeLabel.setText("Welcome Character3!");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
 				} catch (IOException e1) {
@@ -401,7 +391,7 @@ public class GameRoom extends JFrame {
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
-						welcomeLabel.setText("Welcome Character4!");
+						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
 				} catch (IOException e1) {
@@ -556,9 +546,9 @@ public class GameRoom extends JFrame {
 					e1.printStackTrace();
 				}
 				windows.show(contentPane, "Login");
-				textuser.setText(loggedinUser);
-				textpass.setText("");
-				loggedinUser = "";
+				// textuser.setText(loggedinUser);
+				// textpass.setText("");
+				// loggedinUser = "";
 			}
 		});
 
