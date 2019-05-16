@@ -30,8 +30,6 @@ public class Message implements Comparable {
 
 	@Override
 	public int compareTo(Object o) {
-		// TODO Auto-generated method stub
-
 		return timeStamp.compareTo(((Message) o).timeStamp);
 	}
 }

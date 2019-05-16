@@ -3,7 +3,6 @@ package edu.rosehulman.csse432.groot.method;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import edu.rosehulman.csse432.groot.main.Configuration;
@@ -20,11 +19,8 @@ public class Create {
 		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
 		ref.push().setValue(new User(userid), (error, ref1) -> {
 			if (error != null) {
-				// out.writeUTF(String.format("Error: %s, Message %s",
-				// error.getCode(), error.getMessage()));
 				IOUtil.sendData(out, String.valueOf(error.getCode()), error.getMessage());
 			} else {
-				// out.writeUTF("200");
 				IOUtil.sendData(out, "200", "");
 			}
 		});
@@ -34,12 +30,9 @@ public class Create {
 		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ChatRooms");
 		ref.push().setValue(new ChatRoom("REPLACE_ME", creatorid, roomname, true), (error, ref1) -> {
 			if (error != null) {
-				// out.writeUTF(String.format("Error: %s, Message %s",
-				// error.getCode(), error.getMessage()));
 				IOUtil.sendData(out, String.valueOf(error.getCode()), error.getMessage());
 
 			} else {
-				// out.writeUTF("200");
 				IOUtil.sendData(out, "200", "");
 			}
 		});

@@ -4,13 +4,6 @@
     "secret": "/Users/liuz6/Downloads/groot-new-secret.json"
   },
   "database": {
-    "db_instance": "",
     "db_url": "https://groot-2e98b.firebaseio.com/",
-    "db_dbname": "",
-    "db_username": "",
-    "db_password": ""
-  },
-  "client": {
-    "TODO": "TODO"
   }
 }

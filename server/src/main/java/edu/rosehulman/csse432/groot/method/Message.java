@@ -13,10 +13,8 @@ public class Message {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Messages");
         ref.push().setValue(new edu.rosehulman.csse432.groot.object.Message(chatRoom, sender, text), (error, ref1) -> {
             if (error != null) {
-//                    out.writeUTF(String.format("Error %s, Message %s", error.getCode(), error.getMessage()));
                 IOUtil.sendData(out, String.valueOf(error.getCode()), error.getMessage());
             } else {
-//                    out.writeUTF("200");
                 IOUtil.sendData(out, "200", "");
             }
         });

@@ -24,38 +24,6 @@ public class ChatRoom implements Comparable<ChatRoom> {
         this.waiting = isWaiting;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public void setWaiting(boolean waiting) {
-        this.waiting = waiting;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public String getHostName() {
-        return hostName;
-    }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public boolean isWaiting() {
-        return waiting;
-    }
-
-    public long getTimestamp() {
-        return System.currentTimeMillis();
-    }
-
     @Override
     public String toString() {
         return "ChatRoom{" +

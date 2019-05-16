@@ -17,11 +17,7 @@ public class Configuration {
     private int SERVER_PORT;
     private String SECRET_LOCATION;
 
-    private String DB_INSTANCE;
     private String DB_URL;
-    private String DB_NAME;
-    private String DB_USERNAME;
-    private String DB_PASSWORD;
 
     private Configuration() {
     }
@@ -40,9 +36,6 @@ public class Configuration {
         JSONObject js = null;
         try {
             js = (JSONObject) parser.parse(new FileReader("config.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            exit(1);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
             exit(1);
@@ -50,15 +43,10 @@ public class Configuration {
 
         JSONObject serverJS = (JSONObject) js.get("server");
         JSONObject dbJS = (JSONObject) js.get("database");
-        JSONObject clientJS = (JSONObject) js.get("client");
 
         instance.SERVER_PORT = Integer.parseInt((String) serverJS.get("port"));
         instance.SECRET_LOCATION = (String) serverJS.get("secret");
 
-        instance.DB_INSTANCE = (String) dbJS.get("db_instance");
-        instance.DB_NAME = (String) dbJS.get("db_dbname");
-        instance.DB_USERNAME = (String) dbJS.get("db_username");
-        instance.DB_PASSWORD = (String) dbJS.get("db_password");
         instance.DB_URL = (String) dbJS.get("db_url");
 
     }
@@ -73,22 +61,6 @@ public class Configuration {
 
     public String getSECRET_LOCATION() {
         return SECRET_LOCATION;
-    }
-
-    public String getDB_INSTANCE() {
-        return DB_INSTANCE;
-    }
-
-    public String getDB_NAME() {
-        return DB_NAME;
-    }
-
-    public String getDB_USERNAME() {
-        return DB_USERNAME;
-    }
-
-    public String getDB_PASSWORD() {
-        return DB_PASSWORD;
     }
 
     public static void main(String[] args) {

@@ -30,22 +30,18 @@ public class Server {
      * @return
      */
     public static CompletableFuture<Server> startServer() {
-        CompletableFuture<Server> startFuture = CompletableFuture.supplyAsync(
+        return CompletableFuture.supplyAsync(
                 () -> {
                     Server server = null;
                     try {
                         server = new Server();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                        exit(1);
-                    } catch (InterruptedException e) {
+                    } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                         exit(1);
                     }
                     return server;
                 }
         );
-        return startFuture;
     }
 
     private Server() throws ExecutionException, InterruptedException {
@@ -92,7 +88,6 @@ public class Server {
      * Handle database connection.
      */
     private void startDatabaseConn() throws IOException {
-        // TODO: https://github.com/bane73/firebase4j
         // initialize database connection
         FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
         FirebaseOptions options = new FirebaseOptions.Builder()
@@ -106,7 +101,7 @@ public class Server {
 
         private boolean isClosed;
 
-        public ServerService(boolean isClosed) {
+        ServerService(boolean isClosed) {
             this.isClosed = isClosed;
         }
 
@@ -134,7 +129,7 @@ public class Server {
      * @return
      */
     public CompletableFuture close() {
-        CompletableFuture<Void> closeFuture = CompletableFuture.runAsync(
+        return CompletableFuture.runAsync(
                 () -> {
                     // TODO: handle close
                     try {
@@ -145,6 +140,5 @@ public class Server {
                     }
                 }
         );
-        return closeFuture;
     }
 }

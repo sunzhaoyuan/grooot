@@ -10,7 +10,7 @@ public class Launcher {
     public static void main(String[] args) {
         Thread mainThread = new Thread(
                 () -> {
-                	
+
                     CompletableFuture<Server> serverFuture = Server.startServer();
                     try {
                         serverFuture.get();
@@ -18,9 +18,7 @@ public class Launcher {
                         // do other things here
                         while (true)
                             ;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                 }
