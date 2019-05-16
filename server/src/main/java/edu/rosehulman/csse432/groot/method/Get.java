@@ -26,7 +26,7 @@ public class Get {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        System.out.println(snapshot.getChildren().iterator().next().getValue(ChatRoom.class).toString());
+//                        System.out.println(snapshot.getChildren().iterator().next().getValue(ChatRoom.class).toString());
 
                         // it should only contain one dataSnapshot
                         snapshot.getChildren()

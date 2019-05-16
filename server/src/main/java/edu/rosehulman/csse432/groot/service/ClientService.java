@@ -63,7 +63,7 @@ public class ClientService implements Runnable {
      * Create User [id]   - Save a new User in the table with the id provided, return status code
      * Create Chatroom [creator id] [roome name]   - Save a new Chatroom in the table, return status code
      * <p>
-     * Message [chatroom name] [sender] [text] - Save a new message in the table, return status code
+     * Message [chatroom name] [sender] [text] [text length] - Save a new message in the table, return status code
      *
      * @param line the message that client send to server
      */
@@ -80,7 +80,7 @@ public class ClientService implements Runnable {
                 break;
             }
             case "Message":
-                message(elements);
+                message(elements, line);
                 break;
             case "Create": {
                 create(elements);
@@ -115,16 +115,18 @@ public class ClientService implements Runnable {
         }
     }
 
-    private void message(String[] elements) throws IOException {
-        if (elements.length != 4) {
+    private void message(String[] elements, String line) throws IOException {
+        if (elements.length <= 5) {
 //            out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
             IOUtil.sendData(out, "406", "Get method: Element length is not correct");
             return;
         }
-        Message.sendMessage(out, elements[1], elements[2], elements[3]);
+        int messageLength = Integer.parseInt(elements[elements.length - 1]);
+        String messageBody = line.substring(line.length() - messageLength);
+        Message.sendMessage(out, elements[1], elements[2], messageBody);
     }
 
-    private void create(String[] elements) throws IOException {
+    private void create(String[] elements) {
         String determinator = elements[1];
         switch (determinator) {
             case "User":
@@ -139,6 +141,7 @@ public class ClientService implements Runnable {
 //                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
                     IOUtil.sendData(out, "406", "Get method: Element length is not correct");
                 }
+
                 Create.createChatroom(out, elements[2], elements[3]);
                 break;
             default:
