@@ -246,6 +246,7 @@ public class GameRoom extends JFrame {
 					String input = in.readUTF();
 					System.out.print(input);
 					if (input.contains("200")) {
+						roomID = input.split(" ")[input.split(" ").length - 1];
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
@@ -506,9 +507,11 @@ public class GameRoom extends JFrame {
 					return;
 				}
 
+				String output = String.format("Message %s %s %s %d\n", roomID, creatorID, message, message.length());
+
 				try {
 					DataOutputStream out = new DataOutputStream(client.getOutputStream());
-					out.writeUTF(message);
+					out.writeUTF(output);
 
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -517,9 +520,16 @@ public class GameRoom extends JFrame {
 				chatMsg.setText(message);
 				DataInputStream in;
 				try {
+
 					in = new DataInputStream(client.getInputStream());
-					textArea_1.append("Alice: " + message + "\n");
-					textArea_1.append("Response: " + in.readUTF() + "\n");
+					String input = in.readUTF();
+					System.out.print(input);
+					if (input.contains("200")) {
+						textArea_1.append(creatorID + ": " + message + ". \n");
+					} else {
+						System.out.print("Server dead!");
+					}
+
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
