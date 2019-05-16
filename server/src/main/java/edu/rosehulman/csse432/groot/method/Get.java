@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
 import edu.rosehulman.csse432.groot.main.Configuration;
 import edu.rosehulman.csse432.groot.object.ChatRoom;
+import edu.rosehulman.csse432.groot.util.IOUtil;
 
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -32,8 +33,8 @@ public class Get {
                                 .forEach(dataSnapshot -> {
                                     // get the chatroom object
                                     ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
-                                    String hostName = chatRoom.getHostName();
-                                    System.out.println(hostName);
+                                    String roomName = chatRoom.getRoomName();
+                                    System.out.println(roomName);
 
                                     // send hostname back to client
 //                                    try {
@@ -49,15 +50,13 @@ public class Get {
                                     map.put(chatRoom.getRoomName(), chatRoom);
                                     FirebaseDatabase.getInstance().getReference("ChatRooms")
                                             .updateChildren(map, (error, ref1) -> {
-                                                try {
-                                                    if (error != null) {
-                                                        out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
-                                                    } else {
-                                                        // send hostname back to client
-                                                        out.writeUTF(hostName);
-                                                    }
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
+                                                if (error != null) {
+//                                                        out.writeUTF(String.format("Error: %s, Message %s", error.getCode(), error.getMessage()));
+                                                    IOUtil.sendData(out, String.valueOf(error.getCode()), error.getMessage());
+                                                } else {
+                                                    // send hostname back to client
+//                                                        out.writeUTF(roomName);
+                                                    IOUtil.sendData(out, "200", roomName);
                                                 }
                                             });
                                 });
