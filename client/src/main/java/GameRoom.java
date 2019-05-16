@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JButton;
@@ -29,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.CardLayout;
@@ -71,75 +71,50 @@ import javax.swing.AbstractListModel;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
+import java.io.*;
+import java.net.Socket;
+
 public class GameRoom extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textuser;
-	private JPasswordField textpass;
-	private JTextField userSignup;
-	private JTextField fnameSignup;
-	private JTextField lnameSignup;
-	private JPasswordField passSignup;
-	private JPasswordField newpass;
-	private JPasswordField confirmpass;
+
 	private static JButton[][] buttons;
-	private static JButton resetgame1;
 
 	private static CardLayout windows;
 
-	private static int moveCounter = 9;
-	private static boolean gameWon = false;
-	private static int WhoseTurn = 1;
-
-	private static String serverResponse = null;
-	private static String clientResponse = null;
-	private static String errorMsg;
-	private static String errorTitle;
-	private static int loginTrials = 0;
-	private static int maxLoginTrials = 5;
-	private static Boolean loginFlag;
-	private static String loggedinUser = "";
-	private static String loggedinName = "";
-	private static String opponentUsername = "";
-	private static Boolean addFlag;
 	private JTextField chatMsg;
-	private static Timer timerForUsers;
-	private static Timer timerForMsgs;
-	private static Timer timerForGlobal;
-	private static Timer timerForGames;
-	private static Timer timerForMoves;
-	private final static int ONE_SECOND1 = 800;
-	private final static int ONE_SECOND2 = 2000;
-	private final static int TEN_SECOND1 = 1500;
-	private final static int TEN_SECOND2 = 1000;
-	private final static int FIVE_SECOND = 5000;
-	private static int lastchatID = 0;
-	private static int numRequests = 0;
-	private static String selectedUserChat = " ";
+
 	private JTextField textField;
+	private String creatorID = "";
+	private String roomID = "";
+	Socket client;
 
 	/**
 	 * Create the frame (constructor)
+	 * 
+	 * @throws IOException
+	 * @throws UnknownHostException
 	 */
-	public GameRoom() {
+	public GameRoom() throws UnknownHostException, IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 984, 575);
 
-		setTitle("The GameRoom Login Beta0.x");
+		setTitle("Groot");
 		JPanel controlPanel = new JPanel();
-		JPanel signupPanel = new JPanel();
-		JPanel loginPanel = new JPanel();
-		JPanel modifyPanel = new JPanel();
-		JPanel tictactoePanel = new JPanel();
-		JPanel scoresPanel = new JPanel();
 
+		JPanel loginPanel = new JPanel();
+
+		JPanel characterPanel = new JPanel();
+		JPanel selectPanel = new JPanel();
+
+		characterPanel.setVisible(false);
+		selectPanel.setVisible(false);
 		controlPanel.setVisible(false);
-		signupPanel.setVisible(false);
+
 		loginPanel.setVisible(true);
-		modifyPanel.setVisible(false);
-		tictactoePanel.setVisible(false);
-		scoresPanel.setVisible(false);
+
 		loginPanel.setLayout(null);
 
 		contentPane = new JPanel(new CardLayout());
@@ -148,91 +123,18 @@ public class GameRoom extends JFrame {
 		windows = (CardLayout) contentPane.getLayout();
 
 		contentPane.add(loginPanel, "Login");
-		contentPane.add(signupPanel, "Signup");
+		contentPane.add(selectPanel, "select");
+		contentPane.add(characterPanel, "character");
+
 		contentPane.add(controlPanel, "Controlpanel");
-		contentPane.add(modifyPanel, "Modify");
-		contentPane.add(tictactoePanel, "TicTacToe");
-		contentPane.add(scoresPanel, "Scores");
-		scoresPanel.setLayout(null);
 
-		JLabel lblTicTacToe = new JLabel("Tic Tac Toe");
-		lblTicTacToe.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTicTacToe.setFont(new Font("SansSerif", Font.BOLD, 22));
-		lblTicTacToe.setBounds(208, 87, 464, 38);
-		scoresPanel.add(lblTicTacToe);
-
-		JScrollPane scrollPane_6 = new JScrollPane();
-		scrollPane_6.setBounds(36, 172, 179, 173);
-		scoresPanel.add(scrollPane_6);
-
-		JList list_5 = new JList();
-		scrollPane_6.setViewportView(list_5);
-
-		JLabel lblRanking = new JLabel("Ranking");
-		lblRanking.setHorizontalAlignment(SwingConstants.CENTER);
-		scrollPane_6.setColumnHeaderView(lblRanking);
-		lblRanking.setFont(new Font("SansSerif", Font.BOLD, 19));
-
-		JButton btnBack_2 = new JButton("Back");
-		btnBack_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Controlpanel");
-			}
-		});
-		btnBack_2.setBounds(6, 492, 90, 28);
-		scoresPanel.add(btnBack_2);
-
-		JButton btnScores = new JButton("Scores");
-
-		JButton btnRefresh_1 = new JButton("Refresh");
-		btnRefresh_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnScores.doClick();
-			}
-		});
-		btnRefresh_1.setBounds(6, 452, 90, 28);
-		scoresPanel.add(btnRefresh_1);
+		this.setLocationRelativeTo(null);
 
 		JScrollPane scrollPane_7 = new JScrollPane();
 		scrollPane_7.setBounds(296, 172, 642, 173);
-		scoresPanel.add(scrollPane_7);
 
 		JList list_6 = new JList();
 		scrollPane_7.setViewportView(list_6);
-
-		JLabel lblHistory = new JLabel("History");
-		lblHistory.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHistory.setFont(new Font("SansSerif", Font.BOLD, 19));
-		scrollPane_7.setColumnHeaderView(lblHistory);
-		tictactoePanel.setLayout(new BorderLayout(0, 0));
-		modifyPanel.setLayout(null);
-
-		JLabel lblChangePassword = new JLabel("Change password");
-		lblChangePassword.setBounds(101, 166, 159, 26);
-		modifyPanel.add(lblChangePassword);
-		lblChangePassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-
-		newpass = new JPasswordField();
-		newpass.setBounds(138, 204, 122, 28);
-		modifyPanel.add(newpass);
-		newpass.setColumns(10);
-
-		confirmpass = new JPasswordField();
-		confirmpass.setBounds(138, 244, 122, 28);
-		modifyPanel.add(confirmpass);
-		confirmpass.setColumns(10);
-
-		JButton btnNewButton_1 = new JButton("Submit");
-		btnNewButton_1.setBounds(138, 284, 67, 28);
-		modifyPanel.add(btnNewButton_1);
-
-		JLabel lblNewPassword = new JLabel("New password:");
-		lblNewPassword.setBounds(40, 210, 86, 16);
-		modifyPanel.add(lblNewPassword);
-
-		JLabel lblConfirm = new JLabel("Confirm:");
-		lblConfirm.setBounds(79, 250, 47, 16);
-		modifyPanel.add(lblConfirm);
 
 		JButton btnBack_1 = new JButton("Back");
 		btnBack_1.addActionListener(new ActionListener() {
@@ -247,14 +149,12 @@ public class GameRoom extends JFrame {
 		controlPanel.setLayout(null);
 
 		JTabbedPane chatTab = new JTabbedPane(JTabbedPane.TOP);
-		chatTab.setBounds(6, 6, 229, 504);
+		chatTab.setBounds(6, 6, 500, 504);
 		controlPanel.add(chatTab);
 		JTextArea textArea = new JTextArea();
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		JPanel userChatP = new JPanel();
-		chatTab.addTab("Private Chat", null, userChatP, null);
-		userChatP.setLayout(null);
 
 		JPanel globalChatP = new JPanel();
 		chatTab.addTab("Global Chat", null, globalChatP, null);
@@ -262,7 +162,7 @@ public class GameRoom extends JFrame {
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(6, 22, 217, 365);
+		scrollPane_1.setBounds(6, 22, 500, 365);
 		globalChatP.add(scrollPane_1);
 
 		JTextArea textArea_1 = new JTextArea();
@@ -272,7 +172,7 @@ public class GameRoom extends JFrame {
 		scrollPane_1.setViewportView(textArea_1);
 
 		textField = new JTextField();
-		textField.setBounds(6, 399, 217, 27);
+		textField.setBounds(6, 399, 500, 27);
 		globalChatP.add(textField);
 		textField.setColumns(10);
 
@@ -290,11 +190,201 @@ public class GameRoom extends JFrame {
 		loginPanel.add(textuser);
 		textuser.setColumns(10);
 
-		textpass = new JPasswordField();
-		textpass.setBounds(403, 212, 130, 26);
-		loginPanel.add(textpass);
-		textpass.setColumns(10);
-		JButton btnGetGames = new JButton("Get Games");
+		// JButton btnGetGames = new JButton("Get Games");
+
+		/*
+		 * =========================================================== Character
+		 * ===========================================================
+		 */
+
+		JButton btnCharacter = new JButton("Choose Character!");
+		btnCharacter.setBounds(403, 250, 130, 29);
+
+		JButton btnPlay = new JButton("Play Game!");
+		btnPlay.setBounds(403, 250, 130, 29);
+
+		characterPanel.add(btnCharacter, btnCharacter.CENTER_ALIGNMENT);
+		characterPanel.add(btnPlay, btnPlay.CENTER_ALIGNMENT);
+
+		btnCharacter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				windows.show(contentPane, "select");
+
+			}
+		});
+		btnPlay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				windows.show(contentPane, "select");
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Get " + "Chatroom " + creatorID);
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					System.out.print(input);
+					if (input.contains("200")) {
+						roomID = input.trim().split(" ")[input.split(" ").length - 1];
+						UpdateMessage.update(roomID, textArea_1);
+						windows.show(contentPane, "Controlpanel");
+
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
+		/*
+		 * =========================================================== Select
+		 * ===========================================================
+		 */
+
+		JButton btn1 = new JButton("Sun");
+		btn1.setBounds(403, 250, 130, 29);
+		JButton btn2 = new JButton("Kim");
+		btn2.setBounds(403, 250, 130, 29);
+		JButton btn3 = new JButton("Liu");
+		btn3.setBounds(403, 250, 130, 29);
+		JButton btn4 = new JButton("Wilkin");
+		btn4.setBounds(403, 250, 130, 29);
+
+		selectPanel.add(btn1, btn1.CENTER_ALIGNMENT);
+		selectPanel.add(btn2, btn2.CENTER_ALIGNMENT);
+		selectPanel.add(btn3, btn3.CENTER_ALIGNMENT);
+		selectPanel.add(btn4, btn4.CENTER_ALIGNMENT);
+
+		btn1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				DataInputStream in;
+				try {
+
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					if (input.contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
+						windows.show(contentPane, "Controlpanel");
+
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
+		btn2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
+						windows.show(contentPane, "Controlpanel");
+
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btn3.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DataOutputStream out;
+				try {
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
+						windows.show(contentPane, "Controlpanel");
+
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btn4.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DataOutputStream out;
+				try {
+
+					out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
+					out.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				DataInputStream in;
+				try {
+					in = new DataInputStream(client.getInputStream());
+					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
+						windows.show(contentPane, "Controlpanel");
+
+						welcomeLabel.setText("Welcome " + creatorID + "!");
+						usersCombo.removeAllItems();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
 
 		/*
 		 * =========================================================== LOGIN
@@ -302,123 +392,65 @@ public class GameRoom extends JFrame {
 		 */
 
 		JButton btnLogin = new JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// package into comma separated value string
-				String username = textuser.getText();
-				String password = textpass.getText();
-
-				// check empty string case
-				if (username.equals("") || password.equals("")) {
-					username = password = " ";
-
-					// prevent more than 3 failed attempts
-
-					textArea.setText("");
-					loggedinUser = username; // remember username
-					loginTrials = 0;
-					windows.show(contentPane, "Controlpanel");
-					newpass.setText("");
-					confirmpass.setText("");
-					welcomeLabel.setText("Welcome " + loggedinName);
-					usersCombo.removeAllItems();
-
-					// grab list of available games
-					btnGetGames.doClick();
-
-				}
-			}
-		});
 		btnLogin.setBounds(403, 250, 130, 29);
 		loginPanel.add(btnLogin);
-
-		// ENTER key for login button
-		textpass.addActionListener(new ActionListener() {
-			@Override
+		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnLogin.doClick();
+
+				String ip = "127.0.0.1";
+				int port = 5000;
+				boolean flag = true;
+
+				try {
+
+					client = new Socket(ip, port);
+					System.out.println("connected to:" + ip + " Port number:" + port);
+					System.out.println("Connection succeed!");
+
+					// String username = textuser.getText();
+					// String password = textpass.getText();
+
+					creatorID = textuser.getText();
+
+					DataOutputStream out;
+					try {
+						out = new DataOutputStream(client.getOutputStream());
+						out.writeUTF("Create User " + creatorID);
+						out.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+
+					DataInputStream in;
+					try {
+
+						in = new DataInputStream(client.getInputStream());
+						String input = in.readUTF();
+						if (input.contains("200")) {
+							roomID = creatorID + "_room";
+							// UpdateMessage.update(roomID, textArea_1);
+							windows.show(contentPane, "character");
+						}
+
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
 			}
 		});
 
 		/*
-		 * =========================================================== SIGNUP
+		 * =========================================================== Welcome
 		 * ===========================================================
 		 */
 
-		JButton btnSignup = new JButton("Sign-Up");
-
-		btnSignup.setBounds(403, 306, 130, 29);
-		loginPanel.add(btnSignup);
-
-		JLabel lblUsername_1 = new JLabel("Username:");
+		JLabel lblUsername_1 = new JLabel("Nickname:");
 		lblUsername_1.setBounds(323, 179, 76, 16);
 		loginPanel.add(lblUsername_1);
-
-		JLabel lblPassword_1 = new JLabel("Password:");
-		lblPassword_1.setBounds(323, 217, 68, 16);
-		loginPanel.add(lblPassword_1);
-
-		JLabel lblNewHere = new JLabel("New here?");
-		lblNewHere.setBounds(323, 311, 76, 16);
-		loginPanel.add(lblNewHere);
-
-		JButton btnNewButton = new JButton("Sign Up");
-		btnNewButton.setBounds(389, 312, 130, 29);
-
-		signupPanel.setLayout(null);
-		signupPanel.add(btnNewButton);
-
-		userSignup = new JTextField();
-		userSignup.setBounds(389, 160, 130, 26);
-		signupPanel.add(userSignup);
-		userSignup.setColumns(10);
-
-		fnameSignup = new JTextField();
-		fnameSignup.setBounds(389, 198, 130, 26);
-		signupPanel.add(fnameSignup);
-		fnameSignup.setColumns(10);
-
-		lnameSignup = new JTextField();
-		lnameSignup.setBounds(389, 236, 130, 26);
-		signupPanel.add(lnameSignup);
-		lnameSignup.setColumns(10);
-
-		passSignup = new JPasswordField();
-		passSignup.setBounds(389, 274, 130, 26);
-		signupPanel.add(passSignup);
-		passSignup.setColumns(10);
-
-		JLabel lblUsername = new JLabel("Username:");
-		lblUsername.setBounds(313, 165, 70, 16);
-		signupPanel.add(lblUsername);
-
-		JLabel lblFirstName = new JLabel("First Name:");
-		lblFirstName.setBounds(313, 203, 84, 16);
-		signupPanel.add(lblFirstName);
-
-		JLabel lblLastName = new JLabel("Last Name:");
-		lblLastName.setBounds(313, 241, 70, 16);
-		signupPanel.add(lblLastName);
-
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(313, 274, 84, 16);
-		signupPanel.add(lblPassword);
-
-		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Login");
-				loggedinUser = "";
-				userSignup.setText("");
-				fnameSignup.setText("");
-				lnameSignup.setText("");
-				passSignup.setText("");
-				textuser.setText("");
-				textpass.setText("");
-			}
-		});
-		btnBack.setBounds(6, 481, 117, 29);
-		signupPanel.add(btnBack);
 
 		welcomeLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 19));
 		controlPanel.add(welcomeLabel);
@@ -443,215 +475,76 @@ public class GameRoom extends JFrame {
 		btnSendMsg.setBounds(6, 435, 118, 34);
 		userChatP.add(btnSendMsg);
 
-		JLabel lblRecipient = new JLabel("Recipient:");
-		lblRecipient.setBounds(36, 403, 57, 15);
-		userChatP.add(lblRecipient);
-
-		JButton btnModifyProfile = new JButton("Modify Profile");
-		btnModifyProfile.setBounds(804, 47, 114, 27);
-		btnModifyProfile.addActionListener(new ActionListener() {
+		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				windows.show(contentPane, "Modify");
+				String message = textField.getText();
+				String recipient = "GLOBAL";
+
+				if (message.equals("")) {
+					chatMsg.setText("");
+					return;
+				}
+
+				String output = String.format("Message %s %s %s\n", roomID, creatorID, message);
+
+				try {
+					DataOutputStream out = new DataOutputStream(client.getOutputStream());
+					out.writeUTF(output);
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				chatMsg.setText(message);
+				DataInputStream in;
+				try {
+
+					in = new DataInputStream(client.getInputStream());
+					String input = in.readUTF();
+					System.out.print(input);
+					if (input.contains("200")) {
+
+						;
+					} else {
+						System.out.print("Server dead!");
+					}
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				textField.setText("");
 			}
 		});
-		controlPanel.add(btnModifyProfile);
+		btnSend.setBounds(6, 435, 118, 34);
+		globalChatP.add(btnSend);
 
 		JButton btnSignout = new JButton("Signout");
 		btnSignout.setBounds(837, 493, 115, 27);
 		controlPanel.add(btnSignout);
 		btnSignout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					DataOutputStream out = new DataOutputStream(client.getOutputStream());
 
+					out.writeUTF("quit");
+					client.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				windows.show(contentPane, "Login");
-				textuser.setText(loggedinUser);
-				textpass.setText("");
-				loggedinUser = "";
+				// textuser.setText(loggedinUser);
+				// textpass.setText("");
+				// loggedinUser = "";
 			}
 		});
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(677, 86, 241, 407);
-		controlPanel.add(tabbedPane);
-		JList<String> friendList = new JList<String>();
-
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Add Friends", null, panel, null);
-		panel.setLayout(null);
-
-		JButton userSearch = new JButton("Search for Friends");
-
-		userSearch.setBounds(6, 251, 229, 33);
-		panel.add(userSearch);
-
-		JButton btnSendRequest = new JButton("Add Friend");
-
-		btnSendRequest.setBounds(6, 175, 229, 27);
-		panel.add(btnSendRequest);
-
-		btnSendRequest.setEnabled(false);
-
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(6, 6, 229, 157);
-		panel.add(scrollPane_2);
-
-		scrollPane_2.setViewportView(friendList);
-
-		friendList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Manage Friends", null, panel_1, null);
-		panel_1.setLayout(null);
-
-		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(6, 6, 229, 157);
-		panel_1.add(scrollPane_3);
-
-		JList list = new JList();
-		scrollPane_3.setViewportView(list);
-
-		JButton btnGetFriends = new JButton("Get Friends");
-
-		btnGetFriends.setBounds(6, 175, 229, 27);
-		panel_1.add(btnGetFriends);
-
-		JButton btnRemoveFriend = new JButton("Remove Friend");
-
-		btnRemoveFriend.setEnabled(false);
-		btnRemoveFriend.setBounds(6, 214, 114, 27);
-		panel_1.add(btnRemoveFriend);
-
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBounds(321, 346, 305, 180);
-		controlPanel.add(tabbedPane_1);
-
-		JPanel panel_2 = new JPanel();
-		tabbedPane_1.addTab("Choose Character", null, panel_2, null);
-		panel_2.setLayout(null);
-
-		JScrollPane scrollPane_4 = new JScrollPane();
-		scrollPane_4.setBounds(6, 6, 293, 78);
-		panel_2.add(scrollPane_4);
-
-		JList list_3 = new JList();
-		scrollPane_4.setViewportView(list_3);
-
-		JButton btnNewButton_3 = new JButton("Accept");
-
-		btnNewButton_3.setBounds(203, 116, 90, 28);
-		panel_2.add(btnNewButton_3);
-
-		JButton btnNewButton_4 = new JButton("Decline");
-
-		btnNewButton_4.setBounds(203, 84, 90, 28);
-		panel_2.add(btnNewButton_4);
-
-		JButton btnNewButton_5 = new JButton("Refresh");
-
-		btnNewButton_5.setBounds(16, 96, 90, 28);
-		panel_2.add(btnNewButton_5);
-
-		JPanel panel_3 = new JPanel();
-		tabbedPane_1.addTab("Accepted Requests", null, panel_3, null);
-		panel_3.setLayout(null);
-
-		JScrollPane scrollPane_5 = new JScrollPane();
-		scrollPane_5.setBounds(6, 6, 293, 78);
-		panel_3.add(scrollPane_5);
-
-		JList list_4 = new JList();
-		scrollPane_5.setViewportView(list_4);
-
-		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(249, 6, 416, 337);
-		controlPanel.add(panel_4);
-		panel_4.setLayout(null);
-
-		JScrollPane game_select = new JScrollPane();
-		game_select.setBounds(68, 5, 262, 112);
-		panel_4.add(game_select);
-
-		JLabel lblSelectGame = new JLabel("Select Game");
-		lblSelectGame.setHorizontalAlignment(SwingConstants.CENTER);
-		game_select.setColumnHeaderView(lblSelectGame);
-
-		JList list_1 = new JList();
-		game_select.setViewportView(list_1);
-
-		JScrollPane game_user_select = new JScrollPane();
-		game_user_select.setBounds(68, 129, 262, 112);
-		panel_4.add(game_user_select);
-
-		JLabel lblSelectFriend = new JLabel("Select From Online Friends");
-		lblSelectFriend.setHorizontalAlignment(SwingConstants.CENTER);
-		game_user_select.setColumnHeaderView(lblSelectFriend);
-
-		JList list_2 = new JList();
-		game_user_select.setViewportView(list_2);
-
-		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.setBounds(338, 166, 72, 28);
-		panel_4.add(btnRefresh);
-
-		JButton btnNewButton_2 = new JButton("Send Request");
-		btnNewButton_2.setBounds(135, 263, 107, 28);
-		panel_4.add(btnNewButton_2);
-
-		list_2.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting() == false) {
-
-					if ((list_2.getSelectedIndex() == -1) && (list_1.getSelectedIndex() == -1)) {
-						// No selection, disable fire button.
-						btnNewButton_2.setEnabled(false);
-					} else {
-						// Selection, enable the fire button.
-						btnNewButton_2.setEnabled(true);
-					}
-				}
-			}
-
-		});
-
-		btnGetGames.setBounds(558, 46, 107, 28);
-		// controlPanel.add(btnGetGames);
-
-		friendList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting() == false) {
-
-					if (friendList.getSelectedIndex() == -1) {
-						// No selection, disable fire button.
-						btnSendRequest.setEnabled(false);
-					} else {
-						// Selection, enable the fire button.
-						btnSendRequest.setEnabled(true);
-					}
-				}
-			}
-		});
-
-		btnNewButton_4.setEnabled(false);
-		list_3.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting() == false) {
-
-					if (list_3.getSelectedIndex() == -1) {
-						btnNewButton_4.setEnabled(false);
-					} else {
-						btnNewButton_4.setEnabled(true);
-					}
-				}
-			}
-		});
-
-		btnNewButton_3.setEnabled(false);
-
-		btnScores.setBounds(677, 47, 114, 27);
-		controlPanel.add(btnScores);
 
 		// ENTER key for sending message
 		chatMsg.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("ahhhhhhhh");
 				btnSendMsg.doClick();
 			}
 		});

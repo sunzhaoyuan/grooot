@@ -73,16 +73,7 @@ import javax.swing.SwingConstants;
 
 public class Main extends JFrame {
 
-	private static CardLayout windows;
 
-	private static int moveCounter = 9;
-	private static boolean gameWon = false;
-	private static int WhoseTurn = 1;
-
-	private static int lastchatID = 0;
-	private static int numRequests = 0;
-	private static String selectedUserChat = " ";
-	private JTextField textField;
 
 	// for logging to server console
 	private static void log(String message) {
@@ -97,7 +88,16 @@ public class Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				// instantiate GUI
-				GameRoom frame = new GameRoom();
+				GameRoom frame = null;
+				try {
+					frame = new GameRoom();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				frame.setVisible(true);
 			}
 		});
