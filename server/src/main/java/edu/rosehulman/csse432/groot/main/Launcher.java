@@ -1,4 +1,4 @@
-package Main;
+package edu.rosehulman.csse432.groot.main;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -10,6 +10,7 @@ public class Launcher {
     public static void main(String[] args) {
         Thread mainThread = new Thread(
                 () -> {
+                	
                     CompletableFuture<Server> serverFuture = Server.startServer();
                     try {
                         serverFuture.get();

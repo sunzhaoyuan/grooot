@@ -1,24 +1,25 @@
 plugins {
     id 'java'
     id 'application'
+    id 'idea'
 }
 
 group 'grooot'
 version '1.0'
 
 sourceCompatibility = 1.8
-mainClassName = 'Main.Launcher'
+mainClassName = 'edu.rosehulman.csse432.groot.main.Launcher'
 
-task allJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Server-All-Jar',
-                'Implementation-Version': version,
-                'Main-Class': 'Main.Launcher'
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect {it.isDirectory() ? it:zipTree(it)}}
-    with jar
-}
+//task allJar(type: Jar) {
+//    manifest {
+//        attributes 'Implementation-Title': 'Server-All-Jar',
+//                'Implementation-Version': version,
+//                'edu.rosehulman.csse432.groot.main-Class': 'edu.rosehulman.csse432.groot.main.Launcher'
+//    }
+//    baseName = project.name + '-all'
+//    from { configurations.compile.collect {it.isDirectory() ? it:zipTree(it)}}
+//    with jar
+//}
 
 repositories {
     mavenCentral()

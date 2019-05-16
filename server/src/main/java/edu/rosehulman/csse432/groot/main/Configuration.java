@@ -1,4 +1,4 @@
-package Main;
+package edu.rosehulman.csse432.groot.main;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +15,7 @@ public class Configuration {
     private static Configuration instance;
 
     private int SERVER_PORT;
+    private String SECRET_LOCATION;
 
     private String DB_INSTANCE;
     private String DB_URL;
@@ -52,12 +53,13 @@ public class Configuration {
         JSONObject clientJS = (JSONObject) js.get("client");
 
         instance.SERVER_PORT = Integer.parseInt((String) serverJS.get("port"));
+        instance.SECRET_LOCATION = (String) serverJS.get("secret");
 
         instance.DB_INSTANCE = (String) dbJS.get("db_instance");
         instance.DB_NAME = (String) dbJS.get("db_dbname");
         instance.DB_USERNAME = (String) dbJS.get("db_username");
         instance.DB_PASSWORD = (String) dbJS.get("db_password");
-        instance.DB_URL = (String) dbJS.get("db_dburl");
+        instance.DB_URL = (String) dbJS.get("db_url");
 
     }
 
@@ -67,6 +69,10 @@ public class Configuration {
 
     public int getSERVER_PORT() {
         return SERVER_PORT;
+    }
+
+    public String getSECRET_LOCATION() {
+        return SECRET_LOCATION;
     }
 
     public String getDB_INSTANCE() {

@@ -1,10 +1,12 @@
-package Main;
+package edu.rosehulman.csse432.groot.main;
 
+import edu.rosehulman.csse432.groot.service.ClientService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 import static java.lang.System.exit;
 
 public class Server {
-
     private Socket clientSocket = null;
     private ServerSocket serverSocket = null;
 
@@ -52,7 +53,7 @@ public class Server {
         System.out.println("Server: Initialization done.");
 
         this.threads[0] = new Thread(
-            new ServerService(this.isClosed)
+                new ServerService(this.isClosed)
         );
         this.threads[0].start();
     }
@@ -91,17 +92,14 @@ public class Server {
      * Handle database connection.
      */
     private void startDatabaseConn() throws IOException {
-        // TODO: handle database connection
         // TODO: https://github.com/bane73/firebase4j
+        // initialize database connection
+        FileInputStream serviceAccount = new FileInputStream(Configuration.getInstance().getSECRET_LOCATION());
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.getApplicationDefault())
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl(Configuration.getInstance().getDB_URL())
                 .build();
-        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
-        System.out.printf("Server: Firebase app name %s\n", firebaseApp.getName());
-
-        // TODO: double check this implementation
-        this.database = FirebaseDatabase.getInstance(firebaseApp);
+        FirebaseApp.initializeApp(options);
     }
 
     private class ServerService implements Runnable {
@@ -112,11 +110,20 @@ public class Server {
             this.isClosed = isClosed;
         }
 
+        /**
+         * Keep listening client connections. Once a connection is established, create and run a new ClientService.
+         */
         @Override
         public void run() {
             while (!isClosed) {
                 System.out.println("Server: Waiting for client connections...");
-                // TODO: client service
+                try {
+                    clientSocket = serverSocket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Server: Client accepted");
+                new Thread(new ClientService(clientSocket)).start();
             }
         }
     }
@@ -130,6 +137,12 @@ public class Server {
         CompletableFuture<Void> closeFuture = CompletableFuture.runAsync(
                 () -> {
                     // TODO: handle close
+                    try {
+                        serverSocket.close();
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
         );
         return closeFuture;
