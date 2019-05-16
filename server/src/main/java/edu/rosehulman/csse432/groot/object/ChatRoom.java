@@ -6,7 +6,7 @@ public class ChatRoom implements Comparable<ChatRoom> {
     public static final String ROOM_NAME = "roomName"; // for FB path
 
     @JsonIgnore
-    private String key;
+    public String key;
 
     public String clientName;
     public String hostName;

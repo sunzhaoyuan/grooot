@@ -47,7 +47,7 @@ public class Get {
                                     chatRoom.setClientName(clientname);
                                     chatRoom.setWaiting(false);
                                     Map<String, Object> map = new HashMap<>();
-                                    map.put(chatRoom.getRoomName(), chatRoom);
+                                    map.put(chatRoom.key, chatRoom);
                                     FirebaseDatabase.getInstance().getReference("ChatRooms")
                                             .updateChildren(map, (error, ref1) -> {
                                                 if (error != null) {
