@@ -121,8 +121,9 @@ public class ClientService implements Runnable {
             IOUtil.sendData(out, "406", "Message method: Element length is not correct");
             return;
         }
-        int messageLength = Integer.parseInt(elements[elements.length - 1]);
-        String messageBody = line.substring(line.length() - messageLength);
+        String messageLength = elements[elements.length - 1];
+        int messagel = Integer.parseInt(elements[elements.length - 1]);
+        String messageBody = line.trim().substring(line.length() - messageLength.length() - 1 - messagel);
         Message.sendMessage(out, elements[1], elements[2], messageBody);
     }
 
