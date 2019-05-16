@@ -1,6 +1,11 @@
 package edu.rosehulman.csse432.groot.object;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class Message {
+
+    @JsonIgnore
+    private String key;
 
     private String chatRoom;
     private String sender;
@@ -20,9 +25,11 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "chatRoom='" + chatRoom + '\'' +
+                "key='" + key + '\'' +
+                ", chatRoom='" + chatRoom + '\'' +
                 ", sender='" + sender + '\'' +
                 ", text='" + text + '\'' +
+                ", timeStamp=" + timeStamp +
                 '}';
     }
 }
