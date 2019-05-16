@@ -1,9 +1,0 @@
-{
-  "server": {
-    "port": "5000",
-    "secret": "/Users/liuz6/Downloads/groot-new-secret.json"
-  },
-  "database": {
-    "db_url": "https://groot-2e98b.firebaseio.com/",
-  }
-}
