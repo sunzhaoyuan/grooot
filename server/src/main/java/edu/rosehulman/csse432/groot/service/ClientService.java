@@ -74,6 +74,7 @@ public class ClientService implements Runnable {
         assert elements.length > 1 : "Elements length not correct.";
 
         String method = elements[0];
+        System.out.println(method + "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         switch (method) {
             case "Get": {
                 get(elements);
@@ -118,7 +119,7 @@ public class ClientService implements Runnable {
     private void message(String[] elements, String line) throws IOException {
         if (elements.length <= 5) {
 //            out.writeUTF("406 Not Acceptable\nMessage method: Element length is not correct");
-            IOUtil.sendData(out, "406", "Get method: Element length is not correct");
+            IOUtil.sendData(out, "406", "Message method: Element length is not correct");
             return;
         }
         int messageLength = Integer.parseInt(elements[elements.length - 1]);
@@ -132,14 +133,14 @@ public class ClientService implements Runnable {
             case "User":
                 if (elements.length != 3) {
 //                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
-                    IOUtil.sendData(out, "406", "Get method: Element length is not correct");
+                    IOUtil.sendData(out, "406", "Create method: Element length is not correct");
                 }
                 Create.createUser(out, elements[2]);
                 break;
             case "Chatroom":
                 if (elements.length != 4) {
 //                    out.writeUTF("406 Not Acceptable\nCreate method: Element length is not correct");
-                    IOUtil.sendData(out, "406", "Get method: Element length is not correct");
+                    IOUtil.sendData(out, "406", "Create method: Element length is not correct");
                 }
 
                 Create.createChatroom(out, elements[2], elements[3]);

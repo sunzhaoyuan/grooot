@@ -246,7 +246,7 @@ public class GameRoom extends JFrame {
 					String input = in.readUTF();
 					System.out.print(input);
 					if (input.contains("200")) {
-						roomID = input.split(" ")[input.split(" ").length - 1];
+						roomID = input.trim().split(" ")[input.split(" ").length - 1];
 						windows.show(contentPane, "Controlpanel");
 						newpass.setText("");
 						confirmpass.setText("");
