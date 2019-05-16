@@ -32,12 +32,12 @@ public class Get {
                             ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
                             String key = dataSnapshot.getKey();
                             System.out.println(key);
-                            String roomName = chatRoom.getRoomName();
+                            String roomName = chatRoom.roomName;
                             System.out.println(roomName);
 
                             // update waiting to false and clientname to the real clientname
-                            chatRoom.setClientName(clientname);
-                            chatRoom.setWaiting(false);
+                            chatRoom.clientName = clientname;
+                            chatRoom.waiting = false;
                             Map<String, Object> map = new HashMap<>();
                             map.put(key, chatRoom);
                             FirebaseDatabase.getInstance().getReference("ChatRooms").updateChildren(map,
