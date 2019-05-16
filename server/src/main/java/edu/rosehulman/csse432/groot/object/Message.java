@@ -7,10 +7,10 @@ public class Message {
     @JsonIgnore
     private String key;
 
-    private String chatRoom;
-    private String sender;
-    private String text;
-    private Long timeStamp;
+    public String chatRoom;
+    public String sender;
+    public String text;
+    public Long timeStamp;
 
     public Message() {
     }
