@@ -9,52 +9,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class UpdateMessage {
-    private static ArrayList<Message> messages = new ArrayList<>();
+	public static long maxTimeStamp = -1;
 
-    public static void update(String currentRoomName, JTextArea textArea) throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("D:\\y\\SCHOOLworks\\Rosehulman\\CSSE\\csse432\\project\\groot.json");
-        FirebaseOptions options = null;
-        options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://groot-2e98b.firebaseio.com/")
-                .build();
-        FirebaseApp.initializeApp(options);
+	public static void update(String currentRoomName, JTextArea textArea) throws IOException {
+		FileInputStream serviceAccount = new FileInputStream("/Users/liuz6/Downloads/groot-new-secret.json");
+		FirebaseOptions options = null;
+		options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				.setDatabaseUrl("https://groot-2e98b.firebaseio.com/").build();
+		FirebaseApp.initializeApp(options);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
-        ref.child("Messages").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                snapshot.getChildren().forEach((dataSnapshot) -> {
-                    Message message = dataSnapshot.getValue(Message.class);
-                    if(message.chatRoom.equals(currentRoomName)){
-                        //TODO: add to panel
-                        //TODO: other TODO, send message to server
-                        if(!messages.contains(message)){
-                            textArea.append(message.sender+": "+message.text);
-                            messages.add(message);
-                        }
-                    }
-                });
-            }
+		ref.child("Messages").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot snapshot) {
+				snapshot.getChildren().forEach((dataSnapshot) -> {
+					Message message = dataSnapshot.getValue(Message.class);
+					if (message.chatRoom.equals(currentRoomName)) {
+						// TODO: add to panel
+						// TODO: other TODO, send message to server
+						if (message.timeStamp.compareTo(maxTimeStamp) > 0) {
+							textArea.append(message.sender + ": " + message.text + "\n");
+							maxTimeStamp = message.timeStamp;
+						}
+					}
+				});
+			}
 
-            @Override
-            public void onCancelled(DatabaseError error) {
+			@Override
+			public void onCancelled(DatabaseError error) {
 
-            }
-        });
+			}
+		});
 
-    }
-//
-//    public static void main(String[] args) {
-//        try {
-//            update("",);
-//            while (true){
-//
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+	}
+	//
+	// public static void main(String[] args) {
+	// try {
+	// update("",);
+	// while (true){
+	//
+	// }
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 }

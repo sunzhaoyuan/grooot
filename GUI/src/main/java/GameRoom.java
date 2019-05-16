@@ -79,10 +79,7 @@ public class GameRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textuser;
-	private JPasswordField textpass;
 
-	private JPasswordField newpass;
-	private JPasswordField confirmpass;
 	private static JButton[][] buttons;
 
 	private static CardLayout windows;
@@ -139,12 +136,6 @@ public class GameRoom extends JFrame {
 		JList list_6 = new JList();
 		scrollPane_7.setViewportView(list_6);
 
-		newpass = new JPasswordField();
-		newpass.setBounds(138, 204, 122, 28);
-
-		confirmpass = new JPasswordField();
-		confirmpass.setBounds(138, 244, 122, 28);
-
 		JButton btnBack_1 = new JButton("Back");
 		btnBack_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -158,7 +149,7 @@ public class GameRoom extends JFrame {
 		controlPanel.setLayout(null);
 
 		JTabbedPane chatTab = new JTabbedPane(JTabbedPane.TOP);
-		chatTab.setBounds(6, 6, 229, 504);
+		chatTab.setBounds(6, 6, 500, 504);
 		controlPanel.add(chatTab);
 		JTextArea textArea = new JTextArea();
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
@@ -171,7 +162,7 @@ public class GameRoom extends JFrame {
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(6, 22, 217, 365);
+		scrollPane_1.setBounds(6, 22, 500, 365);
 		globalChatP.add(scrollPane_1);
 
 		JTextArea textArea_1 = new JTextArea();
@@ -181,7 +172,7 @@ public class GameRoom extends JFrame {
 		scrollPane_1.setViewportView(textArea_1);
 
 		textField = new JTextField();
-		textField.setBounds(6, 399, 217, 27);
+		textField.setBounds(6, 399, 500, 27);
 		globalChatP.add(textField);
 		textField.setColumns(10);
 
@@ -199,10 +190,6 @@ public class GameRoom extends JFrame {
 		loginPanel.add(textuser);
 		textuser.setColumns(10);
 
-		textpass = new JPasswordField();
-		textpass.setBounds(403, 212, 130, 26);
-		loginPanel.add(textpass);
-		textpass.setColumns(10);
 		// JButton btnGetGames = new JButton("Get Games");
 
 		/*
@@ -230,7 +217,6 @@ public class GameRoom extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				windows.show(contentPane, "select");
-
 				DataOutputStream out;
 				try {
 					out = new DataOutputStream(client.getOutputStream());
@@ -239,24 +225,20 @@ public class GameRoom extends JFrame {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-
 				DataInputStream in;
 				try {
 					in = new DataInputStream(client.getInputStream());
 					String input = in.readUTF();
 					System.out.print(input);
 					if (input.contains("200")) {
-						roomID = input.split(" ")[input.split(" ").length - 1];
-						UpdateMessage.update(roomID,textArea_1);
+						roomID = input.trim().split(" ")[input.split(" ").length - 1];
+						UpdateMessage.update(roomID, textArea_1);
 						windows.show(contentPane, "Controlpanel");
-						newpass.setText("");
-						confirmpass.setText("");
+
 						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
-
 				} catch (IOException e1) {
-
 					e1.printStackTrace();
 				}
 
@@ -268,13 +250,13 @@ public class GameRoom extends JFrame {
 		 * ===========================================================
 		 */
 
-		JButton btn1 = new JButton("Character 1");
+		JButton btn1 = new JButton("Sun");
 		btn1.setBounds(403, 250, 130, 29);
-		JButton btn2 = new JButton("Character 2");
+		JButton btn2 = new JButton("Kim");
 		btn2.setBounds(403, 250, 130, 29);
-		JButton btn3 = new JButton("Character 3");
+		JButton btn3 = new JButton("Liu");
 		btn3.setBounds(403, 250, 130, 29);
-		JButton btn4 = new JButton("Character 4");
+		JButton btn4 = new JButton("Wilkin");
 		btn4.setBounds(403, 250, 130, 29);
 
 		selectPanel.add(btn1, btn1.CENTER_ALIGNMENT);
@@ -301,9 +283,9 @@ public class GameRoom extends JFrame {
 					in = new DataInputStream(client.getInputStream());
 					String input = in.readUTF();
 					if (input.contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
 						windows.show(contentPane, "Controlpanel");
-						newpass.setText("");
-						confirmpass.setText("");
+
 						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
@@ -332,9 +314,9 @@ public class GameRoom extends JFrame {
 				try {
 					in = new DataInputStream(client.getInputStream());
 					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
 						windows.show(contentPane, "Controlpanel");
-						newpass.setText("");
-						confirmpass.setText("");
+
 						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
@@ -362,9 +344,9 @@ public class GameRoom extends JFrame {
 				try {
 					in = new DataInputStream(client.getInputStream());
 					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
 						windows.show(contentPane, "Controlpanel");
-						newpass.setText("");
-						confirmpass.setText("");
+
 						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
@@ -380,6 +362,7 @@ public class GameRoom extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				DataOutputStream out;
 				try {
+
 					out = new DataOutputStream(client.getOutputStream());
 					out.writeUTF("Create Chatroom " + creatorID + " " + creatorID + "_room");
 					out.flush();
@@ -390,9 +373,9 @@ public class GameRoom extends JFrame {
 				try {
 					in = new DataInputStream(client.getInputStream());
 					if (in.readUTF().contains("200")) {
+						UpdateMessage.update(roomID, textArea_1);
 						windows.show(contentPane, "Controlpanel");
-						newpass.setText("");
-						confirmpass.setText("");
+
 						welcomeLabel.setText("Welcome " + creatorID + "!");
 						usersCombo.removeAllItems();
 					}
@@ -425,7 +408,7 @@ public class GameRoom extends JFrame {
 					System.out.println("Connection succeed!");
 
 					// String username = textuser.getText();
-					String password = textpass.getText();
+					// String password = textpass.getText();
 
 					creatorID = textuser.getText();
 
@@ -444,6 +427,8 @@ public class GameRoom extends JFrame {
 						in = new DataInputStream(client.getInputStream());
 						String input = in.readUTF();
 						if (input.contains("200")) {
+							roomID = creatorID + "_room";
+							// UpdateMessage.update(roomID, textArea_1);
 							windows.show(contentPane, "character");
 						}
 
@@ -455,14 +440,6 @@ public class GameRoom extends JFrame {
 					e1.printStackTrace();
 				}
 
-			}
-		});
-
-		// ENTER key for login button
-		textpass.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				btnLogin.doClick();
 			}
 		});
 
@@ -508,7 +485,7 @@ public class GameRoom extends JFrame {
 					return;
 				}
 
-				String output = String.format("Message %s %s %s %d\n", roomID, creatorID, message, message.length());
+				String output = String.format("Message %s %s %s\n", roomID, creatorID, message);
 
 				try {
 					DataOutputStream out = new DataOutputStream(client.getOutputStream());
@@ -526,7 +503,8 @@ public class GameRoom extends JFrame {
 					String input = in.readUTF();
 					System.out.print(input);
 					if (input.contains("200")) {
-						textArea_1.append(creatorID + ": " + message + ". \n");
+
+						;
 					} else {
 						System.out.print("Server dead!");
 					}
@@ -535,7 +513,6 @@ public class GameRoom extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
 				textField.setText("");
 			}
 		});

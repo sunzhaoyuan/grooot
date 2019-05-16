@@ -123,7 +123,7 @@ public class Server {
                     e.printStackTrace();
                 }
                 System.out.println("Server: Client accepted");
-                new Thread(new ClientService(clientSocket)).run();
+                new Thread(new ClientService(clientSocket)).start();
             }
         }
     }
